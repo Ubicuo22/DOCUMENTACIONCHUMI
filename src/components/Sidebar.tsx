@@ -1,156 +1,285 @@
-import { ChevronDown, Menu, X } from 'lucide-react';
-import { useState, useMemo } from 'react';
-import { sidebarItems } from '../data/docs';
+import { useCallback, useMemo, useState } from 'react';
+import {
+  ChevronDown,
+  ChevronRight,
+  Home,
+  BookOpen,
+  HelpCircle,
+  Settings,
+  Zap,
+} from 'lucide-react';
+import { modulesList } from '../data/modules';
 
 interface SidebarProps {
   currentPath: string;
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
 }
 
-export function Sidebar({ currentPath, isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProps) {
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set([])
-  );
+export function Sidebar({
+  currentPath,
+  isOpen,
+  onClose,
+  isCollapsed,
+  onToggleCollapse,
+}: SidebarProps) {
+  const [expandedCategory, setExpandedCategory] = useState<string | null>('ventas');
 
-  const toggleSection = (section: string) => {
-    const newExpanded = new Set(expandedSections);
-    if (newExpanded.has(section)) {
-      newExpanded.delete(section);
-    } else {
-      newExpanded.add(section);
-    }
-    setExpandedSections(newExpanded);
-  };
-
-  const isActive = (href: string) => currentPath === href;
-
-  // ✅ OPTIMIZACIÓN 3: Usar useMemo para evitar cálculo en cada render
-  const orderedSections = useMemo(() => {
-    const order = { 'Módulos': 1, 'FAQ': 2, 'Preguntas Frecuentes': 2, 'Home': 3, 'Introducción': 4, 'Guías': 5 };
-    return sidebarItems.sort((a: any, b: any) => {
-      const orderA = order[a.section as keyof typeof order] || 999;
-      const orderB = order[b.section as keyof typeof order] || 999;
-      return orderA - orderB;
-    });
+  // ✅ OPTIMIZACIÓN 1: Memoizar módulos por categoría
+  const modulesByCategory = useMemo(() => {
+    return modulesList.reduce((acc, module) => {
+      if (!acc[module.category]) {
+        acc[module.category] = [];
+      }
+      acc[module.category].push(module);
+      return acc;
+    }, {} as Record<string, typeof modulesList>);
   }, []);
+
+  // ✅ OPTIMIZACIÓN 2: Memoizar callback para links
+  const isActive = useCallback((href: string) => {
+    return currentPath === href || currentPath.startsWith(href + '/');
+  }, [currentPath]);
+
+  // ✅ OPTIMIZACIÓN 3: Memoizar estructura de guías
+  const guides = useMemo(() => [
+    { id: 'primeros-pasos', label: 'Primeros Pasos', href: '/guias/primeros-pasos', icon: Zap },
+    { id: 'instalacion', label: 'Instalación', href: '/guias/instalacion', icon: Settings },
+    { id: 'configuracion', label: 'Configuración', href: '/guias/configuracion', icon: Settings },
+    { id: 'flujos', label: 'Flujos de Operación', href: '/guias/flujos', icon: BookOpen },
+    { id: 'seguridad', label: 'Seguridad', href: '/guias/seguridad', icon: Settings },
+    { id: 'troubleshooting', label: 'Solución de Problemas', href: '/guias/troubleshooting', icon: HelpCircle },
+  ], []);
+
+  // ✅ OPTIMIZACIÓN 4: Memoizar estructura de introducción
+  const introductionItems = useMemo(() => [
+    { id: 'overview', label: 'Acerca de CHUMI', href: '/introduccion/overview', icon: BookOpen },
+    { id: 'arquitectura', label: 'Arquitectura Técnica', href: '/introduccion/arquitectura', icon: Settings },
+    { id: 'requisitos', label: 'Requisitos del Sistema', href: '/introduccion/requisitos', icon: Zap },
+  ], []);
+
+  // ✅ OPTIMIZACIÓN 5: Memoizar categorías ordenadas
+  const categoryOrder = useMemo(() => [
+    { key: 'ventas', label: 'Ventas & Facturas', icon: BookOpen },
+    { key: 'clientes', label: 'Gestión de Clientes', icon: Home },
+    { key: 'operaciones', label: 'Operaciones', icon: Zap },
+    { key: 'financiero', label: 'Financiero', icon: Settings },
+    { key: 'inteligencia', label: 'Inteligencia & IA', icon: Zap },
+    { key: 'seguridad', label: 'Seguridad', icon: Settings },
+  ], []);
+
+  const handleCategoryToggle = useCallback((category: string) => {
+    setExpandedCategory(expandedCategory === category ? null : category);
+  }, [expandedCategory]);
 
   return (
     <>
+      {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
           onClick={onClose}
         />
       )}
 
+      {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 z-40 overflow-y-auto shadow-lg w-80 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } ${
-          isCollapsed ? 'hidden' : ''
-        }`}
+        className={`fixed left-0 top-16 bottom-0 z-40 flex flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${
+          isCollapsed ? 'w-20' : 'w-72'
+        } ${!isOpen && 'hidden lg:flex'}`}
       >
-        {isOpen && (
-          <button
-            onClick={onClose}
-            className="lg:hidden absolute top-4 right-4 p-1 z-50"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
+        {/* Scroll Area */}
+        <nav className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent">
+          <div className="px-3 py-6 space-y-8">
+            {/* Home */}
+            <div className="space-y-2">
+              <a
+                href="/"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
+                  isActive('/') && !isActive('/modulos')
+                    ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                }`}
+              >
+                <Home size={20} className="flex-shrink-0" />
+                {!isCollapsed && (
+                  <span className="font-medium text-sm">Inicio</span>
+                )}
+              </a>
+            </div>
 
-        <div className="sticky top-0 bg-gradient-to-r from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b border-gray-200 dark:border-gray-800 p-3">
-          <button
-            onClick={onToggleCollapse}
-            className="hidden lg:flex w-full h-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300"
-            title="Contraer"
-          >
-            <ChevronDown className="w-5 h-5 rotate-180" />
-          </button>
-        </div>
+            {/* Modules Section */}
+            <div className="space-y-2">
+              {!isCollapsed && (
+                <h3 className="text-xs font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest px-4 py-2">
+                  Módulos
+                </h3>
+              )}
 
-        <nav className="p-4 space-y-2">
-          {orderedSections.map((section: any) => {
-            const isExpanded = expandedSections.has(section.section);
+              <a
+                href="/modulos"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
+                  isActive('/modulos') && !Object.values(modulesByCategory).flat().some((module) => currentPath.includes(module.id))
+                    ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                }`}
+              >
+                <BookOpen size={20} className="flex-shrink-0" />
+                {!isCollapsed && (
+                  <span className="font-medium text-sm">Ver Todos</span>
+                )}
+              </a>
 
-            return (
-              <div key={section.section} className="space-y-1">
-                <button
-                  onClick={() => toggleSection(section.section)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 dark:hover:from-orange-900/20 dark:hover:to-orange-900/20 hover:text-orange-700 dark:hover:text-orange-400 transition-all ${
-                    isExpanded ? 'bg-gradient-to-r from-orange-50 to-orange-50 dark:from-orange-900/20 dark:to-orange-900/20 text-orange-700 dark:text-orange-400' : ''
-                  }`}
-                >
-                  <span>{section.section}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform flex-shrink-0 ${
-                      isExpanded ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
+              {/* Category Accordion */}
+              {!isCollapsed && (
+                <div className="space-y-1">
+                  {categoryOrder.map(({ key, label, icon: Icon }) => (
+                    <div key={key}>
+                      <button
+                        onClick={() => handleCategoryToggle(key)}
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all duration-200 group"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <Icon size={18} className="flex-shrink-0 opacity-60" />
+                          <span className="text-sm font-medium truncate">{label}</span>
+                        </div>
+                        <ChevronDown
+                          size={16}
+                          className={`flex-shrink-0 transition-transform duration-200 ${
+                            expandedCategory === key ? 'rotate-180' : ''
+                          } opacity-40`}
+                        />
+                      </button>
 
-                {isExpanded && (
-                  <div className="space-y-1 pl-2 mt-2 border-l-2 border-orange-200 dark:border-orange-900/30">
-                    {section.items.map((item: any) => (
+                      {/* Submenu */}
+                      {expandedCategory === key && modulesByCategory[key] && (
+                        <div className="space-y-1 pl-2 mt-1">
+                          {modulesByCategory[key].map((module) => (
+                            <a
+                              key={module.id}
+                              href={`/modulos/${module.id}`}
+                              className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-all duration-200 group ${
+                                isActive(`/modulos/${module.id}`)
+                                  ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 font-medium'
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                              }`}
+                            >
+                              <div
+                                className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                                  isActive(`/modulos/${module.id}`)
+                                    ? 'bg-orange-600 dark:bg-orange-400'
+                                    : 'bg-gray-300 dark:bg-gray-700'
+                                }`}
+                              />
+                              <span className="truncate">{module.label}</span>
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Guides Section */}
+            {!isCollapsed && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest px-4 py-2">
+                  Guías
+                </h3>
+                <div className="space-y-1">
+                  {guides.map((guide) => {
+                    const GuideIcon = guide.icon;
+                    return (
                       <a
-                        key={item.href}
-                        href={item.href}
-                        className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                          isActive(item.href)
-                            ? 'bg-gradient-to-r from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700 text-white shadow-md'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
+                        key={guide.id}
+                        href={guide.href}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 group ${
+                          isActive(guide.href)
+                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50'
                         }`}
                       >
-                        <span className="w-2 h-2 rounded-full bg-current flex-shrink-0" />
+                        <GuideIcon size={18} className="flex-shrink-0 opacity-60" />
+                        <span className="truncate">{guide.label}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Introduction Section */}
+            {!isCollapsed && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest px-4 py-2">
+                  Introducción
+                </h3>
+                <div className="space-y-1">
+                  {introductionItems.map((item) => {
+                    const ItemIcon = item.icon;
+                    return (
+                      <a
+                        key={item.id}
+                        href={item.href}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 group ${
+                          isActive(item.href)
+                            ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 font-medium'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                        }`}
+                      >
+                        <ItemIcon size={18} className="flex-shrink-0 opacity-60" />
                         <span className="truncate">{item.label}</span>
                       </a>
-                    ))}
-                  </div>
-                )}
+                    );
+                  })}
+                </div>
               </div>
-            );
-          })}
+            )}
 
-          {/* ✨ NUEVA SECCIÓN: AYUDA */}
-          <div className="space-y-1 mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
-            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-              Ayuda
-            </div>
-            <a
-              href="/faq/modules"
-              className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                isActive('/faq/modules')
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700 text-white shadow-md'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
-              }`}
-            >
-              <span className="text-lg">❓</span>
-              <span className="truncate">Preguntas Frecuentes</span>
-            </a>
+            {/* Help Section */}
+            {!isCollapsed && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest px-4 py-2">
+                  Ayuda
+                </h3>
+                <a
+                  href="/faq"
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 group ${
+                    isActive('/faq')
+                      ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 font-medium'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                  }`}
+                >
+                  <HelpCircle size={18} className="flex-shrink-0 opacity-60" />
+                  <span className="truncate">FAQ</span>
+                </a>
+              </div>
+            )}
           </div>
         </nav>
 
-        <div className="sticky bottom-0 px-4 py-4 border-t border-gray-200 dark:border-gray-800 bg-gradient-to-t from-white to-transparent dark:from-slate-900 dark:to-transparent text-xs text-gray-500 dark:text-gray-400">
-          <p className="text-center">
-            <span className="font-semibold text-gray-600 dark:text-gray-300">CHUMI</span> v1.0
-          </p>
-        </div>
-      </aside>
-
-      {isCollapsed && !isOpen && (
-        <div className="hidden lg:block">
+        {/* Collapse Button */}
+        <div className="border-t border-gray-200 dark:border-gray-800 p-3">
           <button
             onClick={onToggleCollapse}
-            className="fixed left-6 top-24 z-30 p-3 rounded-full bg-orange-500 dark:bg-orange-600 text-white shadow-lg hover:bg-orange-600 dark:hover:bg-orange-700 hover:shadow-xl transition-all hover:scale-110"
-            title="Abrir navegación"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200"
+            title={isCollapsed ? 'Expandir' : 'Contraer'}
           >
-            <Menu className="w-6 h-6" />
+            {isCollapsed ? (
+              <ChevronRight size={20} />
+            ) : (
+              <ChevronDown size={20} className="rotate-90" />
+            )}
+            {!isCollapsed && <span className="text-sm font-medium">Contraer</span>}
           </button>
         </div>
-      )}
+      </aside>
     </>
   );
 }
+
+export default Sidebar;

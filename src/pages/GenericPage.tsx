@@ -1,33 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { modulesList } from '../data/modules/index';
+import { useMemo, useRef, useEffect } from 'react';
+import { introduccion, guias, faq } from '../data/pages';
+import { modulesList } from '../data/modules';
 
-// ✅ OPTIMIZACIÓN 1: Importar estáticamente fuera del componente
-import * as recibos from '../data/modules/recibos';
-import * as clientes from '../data/modules/clientes';
-import * as inventario from '../data/modules/inventario';
-import * as precios from '../data/modules/precios';
-import * as cotizaciones from '../data/modules/cotizaciones';
-import * as reportes from '../data/modules/reportes';
-import * as deudas from '../data/modules/deudas';
-import * as dispositivos from '../data/modules/dispositivos';
-import * as usuarios from '../data/modules/usuarios';
-import * as ubicuoai from '../data/modules/ubicuoai';
-import * as docsStatic from '../data/docs';
-
-// ✅ OPTIMIZACIÓN 2: Crear modulesMap FUERA del componente (una sola vez)
-const MODULES_MAP: Record<string, any> = {
-  recibos,
-  clientes,
-  inventario,
-  precios,
-  cotizaciones,
-  reportes,
-  deudas,
-  dispositivos,
-  usuarios,
-  ubicuoai,
-};
+// ✅ Importar todos los módulos individuales
+import * as modulesData from '../data/modules';
 
 interface GenericPageProps {
   currentPath: string;
@@ -37,172 +13,181 @@ interface GenericPageProps {
   onToggleCollapse?: () => void;
 }
 
-interface NavigationItem {
-  title: string;
-  id: string;
-}
+export function GenericPage({
+  currentPath,
+}: GenericPageProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
 
-interface PageContent {
-  title: string;
-  content: React.ReactNode;
-  navigation: { prev: NavigationItem | null; next: NavigationItem | null };
-}
+  // ✅ OPTIMIZACIÓN 1: Memoizar lógica de obtener contenido
+  const pageContent = useMemo(() => {
+    // Extraer el tipo de página y el ID del path
+    const parts = currentPath.split('/').filter(Boolean);
+    const pageType = parts[0]; // 'modulos', 'guias', 'introduccion', etc.
+    const pageId = parts[1]; // 'recibos', 'primeros-pasos', 'overview', etc.
 
-export default function GenericPage({ currentPath }: GenericPageProps) {
-  const [pageData, setPageData] = useState<PageContent>({
-    title: '',
-    content: null,
-    navigation: { prev: null, next: null }
-  });
+    let title = '';
+    let content = '';
+    let breadcrumbs: Array<{ title: string; href: string }> = [];
 
-  // ✅ OPTIMIZACIÓN 3: Memoizar navegación para no recalcular en cada render
-  const navigation = useMemo(() => {
-    if (!currentPath.startsWith('/modulos/')) return { prev: null, next: null };
+    // Caso 1: Módulos (/modulos/recibos, /modulos/clientes, etc.)
+    if (pageType === 'modulos' && pageId) {
+      // ✅ Buscar en la lista de módulos
+      const module = modulesList.find(m => m.id === pageId);
+      
+      if (module) {
+        title = module.label;
+        
+        // ✅ IMPORTANTE: Obtener el contenido del archivo específico del módulo
+        // Los archivos están en: src/data/modules/[moduleId].ts
+        const moduleFileData = (modulesData as any)[pageId];
+        
+        if (moduleFileData && moduleFileData.content) {
+          // El archivo tiene contenido HTML
+          content = moduleFileData.content;
+        } else if (moduleFileData && moduleFileData.default) {
+          // El archivo exporta por defecto
+          content = moduleFileData.default;
+        } else {
+          // Fallback: generar contenido básico
+          content = `
+            <div class="space-y-8">
+              <div class="prose dark:prose-invert max-w-none">
+                <h2>${module.label}</h2>
+                
+                <p><strong>${module.description}</strong></p>
+                
+                <h3>Información General</h3>
+                <ul>
+                  <li><strong>Categoría:</strong> ${module.category}</li>
+                  <li><strong>Prioridad:</strong> ${module.priority}</li>
+                  <li><strong>Complejidad:</strong> ${module.stats.complexity}</li>
+                  <li><strong>Importancia:</strong> ${module.stats.importance}</li>
+                  <li><strong>Tiempo para dominar:</strong> ${module.stats.timeToMaster}</li>
+                </ul>
+                
+                <h3>¿Cómo Usar?</h3>
+                <p>Accede a este módulo desde la barra lateral o desde el menú principal.</p>
+                <p>Para más información detallada, contacta con Ubicuo Studio.</p>
+                
+                <h3>Contacto</h3>
+                <ul>
+                  <li>📧 ubicuoluzestrategica@gmail.com</li>
+                  <li>💬 +52 4431187975 (WhatsApp)</li>
+                </ul>
+              </div>
+            </div>
+          `;
+        }
 
-    const moduleId = currentPath.replace('/modulos/', '');
-    const currentIndex = modulesList.findIndex(m => m.id === moduleId);
-    
-    return {
-      prev: currentIndex > 0 ? { 
-        title: modulesList[currentIndex - 1].label, 
-        id: modulesList[currentIndex - 1].id 
-      } : null,
-      next: currentIndex < modulesList.length - 1 ? { 
-        title: modulesList[currentIndex + 1].label, 
-        id: modulesList[currentIndex + 1].id 
-      } : null,
-    };
+        breadcrumbs = [
+          { title: 'Home', href: '/' },
+          { title: 'Módulos', href: '/modulos' },
+          { title: title, href: currentPath },
+        ];
+      }
+    }
+    // Caso 2: Guías (/guias/primeros-pasos, /guias/instalacion, etc.)
+    else if (pageType === 'guias' && pageId) {
+      const guide = guias[pageId as keyof typeof guias];
+      if (guide) {
+        title = guide.title;
+        content = guide.content;
+        breadcrumbs = [
+          { title: 'Home', href: '/' },
+          { title: 'Guías', href: '/guias' },
+          { title: title, href: currentPath },
+        ];
+      }
+    }
+    // Caso 3: Introducción (/introduccion/overview, /introduccion/arquitectura, etc.)
+    else if (pageType === 'introduccion' && pageId) {
+      const intro = introduccion[pageId as keyof typeof introduccion];
+      if (intro) {
+        title = intro.title;
+        content = intro.content;
+        breadcrumbs = [
+          { title: 'Home', href: '/' },
+          { title: 'Introducción', href: '/introduccion' },
+          { title: title, href: currentPath },
+        ];
+      }
+    }
+    // Caso 4: FAQ por categoría (/faq/general, /faq/modulos, etc.)
+    else if (pageType === 'faq' && pageId) {
+      const faqSection = faq[pageId as keyof typeof faq];
+      if (faqSection) {
+        title = (faqSection as any).title || 'Preguntas Frecuentes';
+        content = (faqSection as any).content;
+        breadcrumbs = [
+          { title: 'Home', href: '/' },
+          { title: 'FAQ', href: '/faq' },
+          { title: title, href: currentPath },
+        ];
+      }
+    }
+
+    return { title, content, breadcrumbs };
   }, [currentPath]);
 
+  // ✅ OPTIMIZACIÓN 2: Scroll to top cuando cambia contenido
   useEffect(() => {
-    const loadContent = async () => {
-      try {
-        if (currentPath.startsWith('/modulos/')) {
-          const moduleId = currentPath.replace('/modulos/', '');
-          const moduleData = MODULES_MAP[moduleId];
-          
-          if (moduleData && moduleData[moduleId]) {
-            setPageData({
-              title: moduleData[moduleId].title,
-              content: moduleData[moduleId].content,
-              navigation
-            });
-          } else {
-            setPageData({
-              title: 'Módulo no encontrado',
-              content: 'El módulo solicitado no existe.',
-              navigation: { prev: null, next: null }
-            });
-          }
-        } else {
-          // Para otras páginas (introducción, guías, faq)
-          const pathParts = currentPath.split('/').filter(Boolean);
-          let data = (docsStatic as any).docsContent;
-          
-          for (const part of pathParts) {
-            data = data[part];
-            if (!data) break;
-          }
-          
-          if (data) {
-            setPageData({
-              title: data.title,
-              content: data.content,
-              navigation: { prev: null, next: null }
-            });
-          } else {
-            setPageData({
-              title: 'Página no encontrada',
-              content: 'El contenido solicitado no existe.',
-              navigation: { prev: null, next: null }
-            });
-          }
-        }
-      } catch (err) {
-        setPageData({
-          title: 'Error',
-          content: 'Hubo un error al cargar el contenido.',
-          navigation: { prev: null, next: null }
-        });
-      }
-    };
-
-    loadContent();
-  }, [currentPath, navigation]);
-
-  const { title, content } = pageData;
-  const isModulePage = currentPath.startsWith('/modulos/');
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [currentPath]);
 
   return (
-    <div className="w-full space-y-8">
-      {/* Contenido Principal */}
-      <article className="prose dark:prose-invert max-w-none">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
-          {title}
-        </h1>
-
-        <div className="space-y-8">
-          {typeof content === 'string' ? (
-            <div
-              dangerouslySetInnerHTML={{ __html: content }}
-              className="space-y-4"
-            />
-          ) : (
-            content
-          )}
-        </div>
-      </article>
-
-      {/* Navegación entre módulos */}
-      {isModulePage && (navigation.prev || navigation.next) && (
-        <nav className="flex gap-4 pt-8 border-t border-gray-200 dark:border-gray-800">
-          {navigation.prev ? (
-            <a
-              href={`/modulos/${navigation.prev.id}`}
-              className="flex-1 group flex items-center gap-3 p-4 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg border border-gray-200 dark:border-gray-800 transition"
-            >
-              <ChevronLeft className="text-gray-400 group-hover:text-orange-500 transition" />
-              <div className="text-left">
-                <div className="text-xs text-gray-500 dark:text-gray-400">Anterior</div>
-                <div className="font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition">
-                  {navigation.prev.title}
-                </div>
-              </div>
-            </a>
-          ) : (
-            <div />
-          )}
-
-          {navigation.next ? (
-            <a
-              href={`/modulos/${navigation.next.id}`}
-              className="flex-1 group flex items-center justify-end gap-3 p-4 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg border border-gray-200 dark:border-gray-800 transition"
-            >
-              <div className="text-right">
-                <div className="text-xs text-gray-500 dark:text-gray-400">Siguiente</div>
-                <div className="font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition">
-                  {navigation.next.title}
-                </div>
-              </div>
-              <ChevronRight className="text-gray-400 group-hover:text-orange-500 transition" />
-            </a>
-          ) : (
-            <div />
-          )}
+    <div className="w-full">
+      {/* Breadcrumbs */}
+      {pageContent.breadcrumbs.length > 0 && (
+        <nav className="flex items-center gap-2 mb-8 text-sm">
+          {pageContent.breadcrumbs.map((crumb, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <a
+                href={crumb.href}
+                className="text-orange-600 dark:text-orange-400 hover:underline"
+              >
+                {crumb.title}
+              </a>
+              {idx < pageContent.breadcrumbs.length - 1 && (
+                <span className="text-gray-400">/</span>
+              )}
+            </div>
+          ))}
         </nav>
       )}
 
-      {/* Back to Modules */}
-      {isModulePage && (
-        <div className="text-center pt-4">
-          <a
-            href="/modulos"
-            className="inline-flex items-center gap-2 px-6 py-3 text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-semibold transition"
-          >
-            ← Volver a todos los módulos
-          </a>
-        </div>
+      {/* Título */}
+      {pageContent.title && (
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
+          {pageContent.title}
+        </h1>
       )}
+
+      {/* Contenido */}
+      <div
+        ref={contentRef}
+        className="prose dark:prose-invert max-w-none overflow-y-auto"
+        dangerouslySetInnerHTML={{ __html: pageContent.content }}
+      />
+
+      {/* Navigation */}
+      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex gap-4">
+        <a
+          href="/modulos"
+          className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition font-medium"
+        >
+          ← Volver a Módulos
+        </a>
+        <a
+          href="/"
+          className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium"
+        >
+          Ir a Home →
+        </a>
+      </div>
     </div>
   );
 }
+
+export default GenericPage;

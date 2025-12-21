@@ -2,9 +2,10 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { HomePage } from './pages/HomePage';
-import GenericPage from './pages/GenericPage';
+import GenericPage from './pages/GenericPage.tsx';
 import { ModulesPage } from './pages/ModulesPage';
 import { FAQModules } from './pages/FAQModules';
+import { FAQPage } from './pages/FAQPage';
 import { TableOfContents } from './components/TableOfContents';
 import { Footer } from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -14,8 +15,8 @@ import './index.css';
 const BREADCRUMB_TITLES: Record<string, string> = {
   modulos: 'Módulos',
   faq: 'FAQ',
-  introduccion: 'Introducción',
   guias: 'Guías',
+  introduccion: 'Introducción',
 };
 
 // ✅ OPTIMIZACIÓN: Type para currentPage
@@ -23,6 +24,7 @@ type PageType =
   | { type: 'home' }
   | { type: 'modules' }
   | { type: 'faq-modules' }
+  | { type: 'faq' }
   | { type: 'generic'; path: string }
   | { type: '404' };
 
@@ -99,6 +101,7 @@ function Router() {
   }, [currentPath]);
 
   // ✅ OPTIMIZACIÓN 6: Memoizar lógica de renderizado de página
+  // ACTUALIZADO: GenericPage ahora maneja /guias, /introduccion y /faq/:id
   const currentPage: PageType = useMemo(() => {
     if (currentPath === '/') {
       return { type: 'home' };
@@ -109,11 +112,19 @@ function Router() {
     if (currentPath === '/faq/modules') {
       return { type: 'faq-modules' };
     }
+    if (currentPath === '/faq') {
+      return { type: 'faq' };
+    }
+    // GenericPage maneja:
+    // - /modulos/:id (módulos)
+    // - /guias/:id (guías)
+    // - /introduccion/:id (introducción)
+    // - /faq/:id (faq específico)
     if (
       currentPath.startsWith('/modulos/') ||
-      currentPath.startsWith('/introduccion/') ||
       currentPath.startsWith('/guias/') ||
-      currentPath.startsWith('/faq/')
+      currentPath.startsWith('/introduccion/') ||
+      (currentPath.startsWith('/faq/') && currentPath !== '/faq/modules')
     ) {
       return { type: 'generic', path: currentPath };
     }
@@ -144,6 +155,9 @@ function Router() {
       
       case 'faq-modules':
         return <FAQModules onNavigate={handleCustomNavigate} />;
+      
+      case 'faq':
+        return <FAQPage />;
       
       case 'generic':
         return (
