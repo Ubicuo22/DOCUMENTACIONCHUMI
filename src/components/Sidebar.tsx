@@ -1,5 +1,5 @@
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { sidebarItems } from '../data/docs';
 
 interface SidebarProps {
@@ -27,16 +27,15 @@ export function Sidebar({ currentPath, isOpen, onClose, isCollapsed, onToggleCol
 
   const isActive = (href: string) => currentPath === href;
 
-  const getSidebarOrder = () => {
+  // ✅ OPTIMIZACIÓN 3: Usar useMemo para evitar cálculo en cada render
+  const orderedSections = useMemo(() => {
+    const order = { 'Módulos': 1, 'FAQ': 2, 'Preguntas Frecuentes': 2, 'Home': 3, 'Introducción': 4, 'Guías': 5 };
     return sidebarItems.sort((a: any, b: any) => {
-      const order = { 'Módulos': 1, 'FAQ': 2, 'Preguntas Frecuentes': 2, 'Home': 3, 'Introducción': 4, 'Guías': 5 };
       const orderA = order[a.section as keyof typeof order] || 999;
       const orderB = order[b.section as keyof typeof order] || 999;
       return orderA - orderB;
     });
-  };
-
-  const orderedSections = getSidebarOrder();
+  }, []);
 
   return (
     <>

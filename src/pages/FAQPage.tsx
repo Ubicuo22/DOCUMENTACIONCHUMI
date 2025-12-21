@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 
 interface FAQItem {
@@ -13,8 +13,8 @@ interface ModuleFAQ {
   faqs: FAQItem[];
 }
 
-// FAQ para cada módulo
-const moduleFAQs: ModuleFAQ[] = [
+// ✅ OPTIMIZACIÓN 1: Mover FAQs FUERA del componente (una sola vez)
+const MODULE_FAQS: ModuleFAQ[] = [
   {
     moduleId: 'recibos',
     moduleName: 'Recibos',
@@ -150,284 +150,120 @@ const moduleFAQs: ModuleFAQ[] = [
       },
     ],
   },
-  {
-    moduleId: 'reportes',
-    moduleName: 'Reportes',
-    icon: '📊',
-    faqs: [
-      {
-        question: '¿Qué reportes están disponibles?',
-        answer: 'Dashboard general, TOP Productos (más vendidos), TOP Clientes (mejores compradores) y análisis por Grupo o categoría.',
-      },
-      {
-        question: '¿Puedo exportar los reportes?',
-        answer: 'Sí, todos los reportes pueden exportarse a Excel o PDF desde el botón "Exportar" en cada reporte.',
-      },
-      {
-        question: '¿Cómo filtro reportes por fecha?',
-        answer: 'Usa el selector de fechas en la parte superior del reporte. Selecciona rango de fechas y el reporte se actualiza automáticamente.',
-      },
-      {
-        question: '¿Qué significa "Margen"?',
-        answer: 'Es el porcentaje de ganancia. Margen = (Precio - Costo) / Precio × 100. Más alto = más rentable.',
-      },
-      {
-        question: '¿Con qué frecuencia se actualizan los reportes?',
-        answer: 'Los reportes se actualizan en tiempo real. Cada venta que hagas aparece inmediatamente en los reportes.',
-      },
-    ],
-  },
-  {
-    moduleId: 'deudas',
-    moduleName: 'Deudas',
-    icon: '💳',
-    faqs: [
-      {
-        question: '¿Cómo sé cuánto me debe un cliente?',
-        answer: 'Ve a Deudas y busca el cliente. Verás el total pendiente, deudas vencidas y próximas a vencer.',
-      },
-      {
-        question: '¿Cómo registro un pago?',
-        answer: 'Abre la deuda del cliente, haz clic en "Registrar Pago" e ingresa monto y método de pago. Se descuenta automáticamente.',
-      },
-      {
-        question: '¿Cómo envío recordatorios de deuda?',
-        answer: 'Selecciona deudas vencidas y haz clic en "Enviar Recordatorio". Se envía automáticamente por email al cliente.',
-      },
-      {
-        question: '¿Qué pasa si un cliente no paga?',
-        answer: 'El sistema marca la deuda como vencida y puede generar intereses según tus políticas configuradas.',
-      },
-      {
-        question: '¿Puedo condonar una deuda?',
-        answer: 'Sí, pero requiere aprobación de gerente/admin. Esto se registra en auditoría con motivo y autorización.',
-      },
-    ],
-  },
-  {
-    moduleId: 'dispositivos',
-    moduleName: 'Dispositivos',
-    icon: '🔐',
-    faqs: [
-      {
-        question: '¿Cómo autorizo un dispositivo?',
-        answer: 'Ve a Dispositivos y haz clic en [+ Autorizar Dispositivo]. Ingresa nombre y descripción del dispositivo.',
-      },
-      {
-        question: '¿Puedo tener múltiples dispositivos?',
-        answer: 'Sí, puedes autorizar varios dispositivos (computadora, tablet, teléfono, etc) para acceder desde múltiples lugares.',
-      },
-      {
-        question: '¿Cómo revoco acceso a un dispositivo?',
-        answer: 'Ve a Dispositivos, encuentra el dispositivo y haz clic en "Revocar Acceso". Ese dispositivo no podrá acceder más.',
-      },
-      {
-        question: '¿Qué pasa si pierdo un dispositivo?',
-        answer: 'Revoca el acceso inmediatamente. Así proteges los datos si alguien más tiene acceso a ese dispositivo.',
-      },
-      {
-        question: '¿Hay límite de dispositivos?',
-        answer: 'El sistema permite múltiples dispositivos. Solo revocar los que ya no uses para mantener seguridad.',
-      },
-    ],
-  },
-  {
-    moduleId: 'usuarios',
-    moduleName: 'Usuarios',
-    icon: '👤',
-    faqs: [
-      {
-        question: '¿Cómo creo un nuevo usuario?',
-        answer: 'Ve a Usuarios, haz clic en [+ Nuevo Usuario], ingresa email, nombre, asigna rol y el sistema envía email de bienvenida.',
-      },
-      {
-        question: '¿Qué roles existen?',
-        answer: 'Vendedor (vende), Bodeguero (gestiona stock), Gerente (reportes), Administrador (todo). Cada rol tiene permisos específicos.',
-      },
-      {
-        question: '¿Puedo cambiar permisos de un usuario?',
-        answer: 'No cambias permisos individuales. Los permisos vienen definidos por el rol. Puedes cambiar el rol del usuario.',
-      },
-      {
-        question: '¿Cómo elimino un usuario?',
-        answer: 'No elimines usuarios activos. Desactívalos para preservar historial. Se pueden reactivar si es necesario.',
-      },
-      {
-        question: '¿Qué es la auditoría?',
-        answer: 'Es el registro de todas las acciones de los usuarios: quién vendió qué, cuándo, cambios, etc. Para transparencia y seguridad.',
-      },
-    ],
-  },
-  {
-    moduleId: 'ubicuoai',
-    moduleName: 'UbicuoAI',
-    icon: '🤖',
-    faqs: [
-      {
-        question: '¿Cómo uso UbicuoAI?',
-        answer: 'Pega información de un pedido (de email, WhatsApp, PDF, etc). UbicuoAI extrae los datos y busca los productos automáticamente.',
-      },
-      {
-        question: '¿Qué significa el color verde/amarillo/rojo?',
-        answer: 'Verde 🟢 = Coincidencia exacta (seguro). Amarillo 🟡 = Aproximado (revisa). Rojo 🔴 = No encontrado (busca manualmente).',
-      },
-      {
-        question: '¿Cómo corrijo un error?',
-        answer: 'Haz clic en el producto rojo y elige el correcto de las opciones. El sistema aprende y usará tu corrección la próxima vez.',
-      },
-      {
-        question: '¿Mejora con el tiempo?',
-        answer: 'Sí, cuantas más correcciones hagas, más aprende. La primera corrección es manual, pero las siguientes son automáticas.',
-      },
-      {
-        question: '¿Puedo usar con cualquier formato?',
-        answer: 'UbicuoAI es flexible. Acepta: "2x iPhone 13", "Dos iphones", "iPhone x2", etc. Busca lo mejor que puede.',
-      },
-    ],
-  },
 ];
 
-interface ExpandedState {
-  [key: string]: boolean;
-}
-
-export default function FAQModulesPage() {
+export function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedModules, setExpandedModules] = useState<ExpandedState>({});
+  const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
-  const toggleModule = (moduleId: string) => {
-    setExpandedModules(prev => ({
-      ...prev,
-      [moduleId]: !prev[moduleId],
-    }));
-  };
+  // ✅ OPTIMIZACIÓN 2: Memoizar búsqueda para no filtrar en cada render
+  const filteredFAQs = useMemo(() => {
+    if (!searchQuery.trim()) return MODULE_FAQS;
 
-  // Filtrar FAQs por búsqueda
-  const filteredFAQs = moduleFAQs.map(module => ({
-    ...module,
-    faqs: module.faqs.filter(
-      faq =>
-        faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        faq.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        module.moduleName.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-  })).filter(module => module.faqs.length > 0);
+    const query = searchQuery.toLowerCase();
+    return MODULE_FAQS.map(module => ({
+      ...module,
+      faqs: module.faqs.filter(
+        faq =>
+          faq.question.toLowerCase().includes(query) ||
+          faq.answer.toLowerCase().includes(query)
+      ),
+    })).filter(module => module.faqs.length > 0);
+  }, [searchQuery]);
+
+  // ✅ OPTIMIZACIÓN 3: Memoizar toggle callback
+  const toggleFAQ = useCallback((id: string) => {
+    setExpandedFAQ(prev => (prev === id ? null : id));
+  }, []);
 
   return (
     <div className="w-full space-y-8">
       {/* Header */}
       <section className="space-y-4">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            ❓ Preguntas Frecuentes
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            Encuentra respuestas a las preguntas más comunes sobre cada módulo de CHUMI.
-          </p>
-        </div>
-
-        {/* Búsqueda */}
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-600" size={20} />
-          <input
-            type="text"
-            placeholder="Busca una pregunta o módulo..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
-          />
-        </div>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          Preguntas Frecuentes
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          Encuentra respuestas a las preguntas más comunes sobre CHUMI
+        </p>
       </section>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{moduleFAQs.length}</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Módulos documentados</p>
-        </div>
-        <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">{moduleFAQs.reduce((sum, m) => sum + m.faqs.length, 0)}</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Preguntas totales</p>
-        </div>
-        <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
-          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">~5 min</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Lectura promedio</p>
-        </div>
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-600" size={20} />
+        <input
+          type="text"
+          placeholder="Busca en todas las preguntas frecuentes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
+        />
       </div>
 
-      {/* FAQs por Módulo */}
-      <section className="space-y-4">
-        {filteredFAQs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              No encontramos resultados para "{searchQuery}"
-            </p>
-          </div>
-        ) : (
-          filteredFAQs.map(module => (
-            <div
-              key={module.moduleId}
-              className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden"
-            >
-              {/* Header del módulo */}
-              <button
-                onClick={() => toggleModule(module.moduleId)}
-                className="w-full p-6 flex items-center justify-between bg-gray-50 dark:bg-slate-900/50 hover:bg-gray-100 dark:hover:bg-slate-900 transition"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">{module.icon}</span>
-                  <div className="text-left">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">{module.moduleName}</h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{module.faqs.length} preguntas</p>
-                  </div>
-                </div>
-                <ChevronDown
-                  className={`transform transition-transform ${expandedModules[module.moduleId] ? 'rotate-180' : ''}`}
-                  size={24}
-                />
-              </button>
-
-              {/* FAQs del módulo */}
-              {expandedModules[module.moduleId] && (
-                <div className="p-6 space-y-3 bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-gray-800">
-                  {module.faqs.map((faq, idx) => (
-                    <details
-                      key={idx}
-                      className="group border border-gray-200 dark:border-gray-800 rounded-lg"
-                    >
-                      <summary
-                        className="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-900/50 transition"
-                      >
-                        <span className="font-medium text-gray-900 dark:text-white">{faq.question}</span>
-                        <ChevronDown className="transform group-open:rotate-180 transition-transform" size={20} />
-                      </summary>
-                      <p className="p-4 pt-0 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-900/50">
-                        {faq.answer}
-                      </p>
-                    </details>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </section>
-
-      {/* CTA */}
-      <section className="bg-orange-50 dark:bg-orange-900/20 p-8 rounded-xl border border-orange-200 dark:border-orange-800">
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">¿No encontraste respuesta?</h3>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
-          Revisa la documentación completa de cada módulo o contacta al equipo de soporte.
-        </p>
-        <div className="flex gap-4">
-          <a
-            href="/modulos"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium"
-          >
-            Ver Documentación Completa
-          </a>
+      {/* Results Counter */}
+      {searchQuery && (
+        <div className="text-sm text-gray-600 dark:text-gray-400">
+          Se encontraron {filteredFAQs.reduce((acc, m) => acc + m.faqs.length, 0)} preguntas
         </div>
-      </section>
+      )}
+
+      {/* FAQs by Module */}
+      {filteredFAQs.length > 0 ? (
+        <div className="space-y-8">
+          {filteredFAQs.map(module => (
+            <section key={module.moduleId} className="space-y-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {module.icon} {module.moduleName}
+              </h2>
+              <div className="space-y-3">
+                {module.faqs.map((faq, idx) => {
+                  const faqId = `${module.moduleId}-${idx}`;
+                  const isExpanded = expandedFAQ === faqId;
+
+                  return (
+                    <div
+                      key={faqId}
+                      className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden"
+                    >
+                      <button
+                        onClick={() => toggleFAQ(faqId)}
+                        className="w-full px-6 py-4 flex items-center justify-between bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 transition"
+                      >
+                        <span className="font-semibold text-gray-900 dark:text-white text-left">
+                          {faq.question}
+                        </span>
+                        <ChevronDown
+                          size={20}
+                          className={`text-orange-500 transition-transform flex-shrink-0 ${
+                            isExpanded ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      {isExpanded && (
+                        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-950">
+                          <p className="text-gray-700 dark:text-gray-300">{faq.answer}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🔍</div>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            No se encontraron resultados
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Intenta con otros términos de búsqueda
+          </p>
+        </div>
+      )}
     </div>
   );
 }
+
+export default FAQPage;

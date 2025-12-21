@@ -1,240 +1,174 @@
-import React, { useState } from 'react';
-import { Search, Filter } from 'lucide-react';
-import { ModulesGrid } from '../components/ModulesGrid';
-import { modulesList, moduleCategories, priorityLevels } from '../data/modules/index';
+import { useState, useCallback, useMemo } from 'react';
+import { modulesList } from '../data/modules';
 
 interface ModulesPageProps {
-  title?: string;
+  onNavigate?: (path: string) => void;
 }
 
-export const ModulesPage: React.FC<ModulesPageProps> = ({ 
-  title = 'Módulos CHUMI' 
-}) => {
+export function ModulesPage({ onNavigate }: ModulesPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedPriority, setSelectedPriority] = useState<string>('all');
 
-  // Filtrar módulos
-  const filteredModules = modulesList.filter((module) => {
-    const matchesSearch = 
-      module.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      module.description.toLowerCase().includes(searchQuery.toLowerCase());
+  // ✅ OPTIMIZACIÓN 1: Memoizar handleModuleClick
+  const handleModuleClick = useCallback((moduleId: string) => {
+    const newPath = `/modulos/${moduleId}`;
     
-    const matchesCategory = !selectedCategory || module.category === selectedCategory;
-    const matchesPriority = !selectedPriority || module.priority === selectedPriority;
+    if (onNavigate) {
+      onNavigate(newPath);
+    } else {
+      window.history.pushState({}, '', newPath);
+      window.dispatchEvent(new Event('navigate') as any);
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [onNavigate]);
 
-    return matchesSearch && matchesCategory && matchesPriority;
-  });
+  // ✅ OPTIMIZACIÓN 2: Memoizar filtrado de módulos
+  const filteredModules = useMemo(() => {
+    return modulesList.filter(module => {
+      const matchesSearch = 
+        module.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = selectedCategory === 'all' || module.category === selectedCategory;
+      const matchesPriority = selectedPriority === 'all' || module.priority === selectedPriority;
+      
+      return matchesSearch && matchesCategory && matchesPriority;
+    });
+  }, [searchQuery, selectedCategory, selectedPriority]);
 
-  const activeFilters = [
-    ...(searchQuery ? [{ type: 'search' as const, value: searchQuery }] : []),
-    ...(selectedCategory ? [{ type: 'category' as const, value: selectedCategory }] : []),
-    ...(selectedPriority ? [{ type: 'priority' as const, value: selectedPriority }] : []),
-  ];
+  // ✅ OPTIMIZACIÓN 3: Memoizar categorías únicas
+  const categories = useMemo(() => {
+    const cats = ['all', ...new Set(modulesList.map(m => m.category))];
+    return cats;
+  }, []);
 
-  const handleClearFilters = () => {
-    setSearchQuery('');
-    setSelectedCategory(null);
-    setSelectedPriority(null);
-  };
+  // ✅ OPTIMIZACIÓN 4: Memoizar prioridades
+  const priorities = useMemo(() => [
+    'all',
+    'critical',
+    'high',
+    'medium',
+  ], []);
 
   return (
-    <div className="w-full space-y-8">
-      {/* Header Hero */}
-      <section className="space-y-4">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            {title}
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            Explora todos los módulos disponibles en CHUMI. Haz clic en cualquier tarjeta para acceder a la documentación completa.
-          </p>
-        </div>
-
-        {/* Barra de búsqueda y filtros */}
-        <div className="space-y-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-600" size={20} />
-            <input
-              type="text"
-              placeholder="Buscar módulos por nombre o descripción..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
-            />
-          </div>
-
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-3 items-center">
-            <Filter size={18} className="text-gray-500 dark:text-gray-400" />
-            
-            {/* Category Filter */}
-            <div className="flex gap-2 flex-wrap">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`px-4 py-2 rounded-full font-medium transition ${
-                  !selectedCategory
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                Todas
-              </button>
-              {Object.entries(moduleCategories).map(([key, category]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedCategory(key)}
-                  className={`px-4 py-2 rounded-full font-medium transition text-sm ${
-                    selectedCategory === key
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {category.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Priority Filter */}
-            <div className="flex gap-2 flex-wrap">
-              <button
-                onClick={() => setSelectedPriority(null)}
-                className={`px-4 py-2 rounded-full font-medium transition ${
-                  !selectedPriority
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                Cualquier Prioridad
-              </button>
-              {Object.entries(priorityLevels).map(([key, priority]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedPriority(key)}
-                  className={`px-4 py-2 rounded-full font-medium transition text-sm ${
-                    selectedPriority === key
-                      ? 'bg-orange-500 text-white'
-                      : `${priority.bgColor} ${priority.color} hover:opacity-80`
-                  }`}
-                >
-                  {priority.icon} {priority.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Filters Display */}
-          {activeFilters.length > 0 && (
-            <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                Filtros activos:
-              </span>
-              <div className="flex gap-2 flex-wrap">
-                {activeFilters.map((filter, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 bg-blue-200 dark:bg-blue-700 text-blue-900 dark:text-blue-100 rounded-full text-sm font-medium"
-                  >
-                    {filter.type === 'search' && `"${filter.value}"`}
-                    {filter.type === 'category' && filter.value}
-                    {filter.type === 'priority' && filter.value}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={handleClearFilters}
-                className="ml-auto text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium"
-              >
-                Limpiar filtros
-              </button>
-            </div>
-          )}
-        </div>
+    <div className="space-y-8">
+      {/* HEADER */}
+      <section className="space-y-3">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Módulos CHUMI</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-lg">
+          Explora todos los módulos disponibles. Haz clic en cualquier tarjeta para acceder a la documentación.
+        </p>
       </section>
 
-      {/* Results Counter */}
-      <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-        Mostrando {filteredModules.length} de {modulesList.length} módulos
+      {/* SEARCH */}
+      <div className="flex gap-3">
+        <input
+          type="text"
+          placeholder="🔍 Buscar módulos por nombre..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        />
       </div>
 
-      {/* No Results */}
-      {filteredModules.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            No se encontraron módulos
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Intenta con otros filtros o términos de búsqueda
-          </p>
-          <button
-            onClick={handleClearFilters}
-            className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium"
-          >
-            Limpiar filtros
-          </button>
-        </div>
-      ) : (
-        /* Grid de Módulos Filtrados */
+      {/* FILTERS */}
+      <div className="space-y-4">
         <div>
-          {filteredModules.length === modulesList.length ? (
-            <ModulesGrid />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredModules.map((module) => (
-                <button
-                  key={module.id}
-                  onClick={() => (window.location.href = `/modulos/${module.id}`)}
-                  className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:shadow-2xl hover:scale-105 active:scale-95 ${module.borderColor} ${module.bgColor} p-6 text-left`}
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${module.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
-                  <div className="relative z-10 space-y-4">
-                    <div className="flex items-start justify-between">
-                      <div className={`p-3 rounded-lg bg-gradient-to-br ${module.color} text-white`}>
-                        {/* Simple icon placeholder */}
-                        <div className="w-7 h-7" />
-                      </div>
-                      <div className={`text-xs font-bold px-2.5 py-1 rounded-full ${priorityLevels[module.priority as keyof typeof priorityLevels].bgColor} ${priorityLevels[module.priority as keyof typeof priorityLevels].color}`}>
-                        {priorityLevels[module.priority as keyof typeof priorityLevels].icon} {priorityLevels[module.priority as keyof typeof priorityLevels].label}
-                      </div>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">{module.label}</h3>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">{module.description}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+          <label className="text-sm font-semibold text-gray-900 dark:text-white mb-2 block">Categoría</label>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-lg font-medium transition ${
+                  selectedCategory === cat
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                {cat === 'all' ? 'Todas' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
-      )}
 
-      {/* Footer Info */}
-      <section className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/50 dark:to-gray-900/50 p-8 rounded-xl border border-gray-200 dark:border-gray-800">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-          ℹ️ Información Útil
-        </h3>
-        <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-          <li className="flex gap-3">
-            <span className="font-bold">•</span>
-            <span>Cada módulo tiene documentación extensa con workflows paso a paso</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-bold">•</span>
-            <span>Los módulos marcados como <strong>CRÍTICO</strong> son esenciales para operaciones diarias</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-bold">•</span>
-            <span>Se recomienda aprender en el orden de la ruta de aprendizaje para máxima efectividad</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-bold">•</span>
-            <span>Todos los módulos están diseñados para ser intuitivos y fáciles de usar</span>
-          </li>
-        </ul>
-      </section>
+        <div>
+          <label className="text-sm font-semibold text-gray-900 dark:text-white mb-2 block">Prioridad</label>
+          <div className="flex flex-wrap gap-2">
+            {priorities.map(priority => (
+              <button
+                key={priority}
+                onClick={() => setSelectedPriority(priority)}
+                className={`px-4 py-2 rounded-lg font-medium transition ${
+                  selectedPriority === priority
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                {priority === 'all' && 'Cualquiera'}
+                {priority === 'critical' && '🔴 Crítico'}
+                {priority === 'high' && '🟠 Alto'}
+                {priority === 'medium' && '🟡 Medio'}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* RESULTS INFO */}
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Se encontraron <strong>{filteredModules.length}</strong> módulo{filteredModules.length !== 1 ? 's' : ''}
+      </p>
+
+      {/* MODULES GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredModules.length > 0 ? (
+          filteredModules.map(module => (
+            <button
+              key={module.id}
+              onClick={() => handleModuleClick(module.id)}
+              className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:shadow-lg hover:scale-105 hover:border-orange-400 transition-all text-left cursor-pointer group"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="text-3xl">{module.icon}</div>
+                <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+                  {module.priority === 'critical' && '🔴 Crítico'}
+                  {module.priority === 'high' && '🟠 Alto'}
+                  {module.priority === 'medium' && '🟡 Medio'}
+                </span>
+              </div>
+              
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition mb-2">
+                {module.label}
+              </h3>
+              
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                {module.description}
+              </p>
+
+              <div className="flex gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 text-xs">
+                <span className="font-semibold text-gray-600 dark:text-gray-400">
+                  Complejidad: {module.stats.complexity}
+                </span>
+              </div>
+
+              {/* CTA */}
+              <div className="flex items-center gap-2 text-sm font-semibold text-orange-600 dark:text-orange-400 group-hover:gap-3 transition-all pt-3">
+                <span>Ver Documentación</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </button>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">No se encontraron módulos</p>
+          </div>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default ModulesPage;

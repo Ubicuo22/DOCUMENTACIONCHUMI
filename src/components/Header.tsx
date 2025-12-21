@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Search } from 'lucide-react';
+import { Menu, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface HeaderProps {
@@ -61,15 +61,13 @@ export function Header({ onMenuClick, breadcrumbs }: HeaderProps) {
           ))}
         </div>
 
-        {/* Search and Theme Toggle */}
+        {/* ✅ OPTIMIZACIÓN 5: Eliminar botón Search sin funcionalidad */}
+        {/* Theme Toggle */}
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition hidden sm:block">
-            <Search className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          </button>
-          
           <button
             onClick={toggleTheme}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+            title="Cambiar tema"
           >
             {theme === 'light' ? (
               <Moon className="w-5 h-5 text-gray-600" />

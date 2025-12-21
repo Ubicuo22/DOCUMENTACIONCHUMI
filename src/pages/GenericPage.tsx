@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { modulesList } from '../data/modules/index';
 
-// Importar todos los módulos estáticamente
+// ✅ OPTIMIZACIÓN 1: Importar estáticamente fuera del componente
 import * as recibos from '../data/modules/recibos';
 import * as clientes from '../data/modules/clientes';
 import * as inventario from '../data/modules/inventario';
@@ -13,9 +13,10 @@ import * as deudas from '../data/modules/deudas';
 import * as dispositivos from '../data/modules/dispositivos';
 import * as usuarios from '../data/modules/usuarios';
 import * as ubicuoai from '../data/modules/ubicuoai';
+import * as docsStatic from '../data/docs';
 
-// Mapa de módulos para búsqueda rápida
-const modulesMap: Record<string, any> = {
+// ✅ OPTIMIZACIÓN 2: Crear modulesMap FUERA del componente (una sola vez)
+const MODULES_MAP: Record<string, any> = {
   recibos,
   clientes,
   inventario,
@@ -41,48 +42,62 @@ interface NavigationItem {
   id: string;
 }
 
+interface PageContent {
+  title: string;
+  content: React.ReactNode;
+  navigation: { prev: NavigationItem | null; next: NavigationItem | null };
+}
+
 export default function GenericPage({ currentPath }: GenericPageProps) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState<React.ReactNode>(null);
-  const [navigation, setNavigation] = useState<{ prev: NavigationItem | null; next: NavigationItem | null }>({ 
-    prev: null, 
-    next: null 
+  const [pageData, setPageData] = useState<PageContent>({
+    title: '',
+    content: null,
+    navigation: { prev: null, next: null }
   });
+
+  // ✅ OPTIMIZACIÓN 3: Memoizar navegación para no recalcular en cada render
+  const navigation = useMemo(() => {
+    if (!currentPath.startsWith('/modulos/')) return { prev: null, next: null };
+
+    const moduleId = currentPath.replace('/modulos/', '');
+    const currentIndex = modulesList.findIndex(m => m.id === moduleId);
+    
+    return {
+      prev: currentIndex > 0 ? { 
+        title: modulesList[currentIndex - 1].label, 
+        id: modulesList[currentIndex - 1].id 
+      } : null,
+      next: currentIndex < modulesList.length - 1 ? { 
+        title: modulesList[currentIndex + 1].label, 
+        id: modulesList[currentIndex + 1].id 
+      } : null,
+    };
+  }, [currentPath]);
 
   useEffect(() => {
     const loadContent = async () => {
       try {
-        // Determinar qué contenido cargar basado en la ruta
         if (currentPath.startsWith('/modulos/')) {
           const moduleId = currentPath.replace('/modulos/', '');
-          
-          // Obtener el módulo del mapa
-          const moduleData = modulesMap[moduleId];
+          const moduleData = MODULES_MAP[moduleId];
           
           if (moduleData && moduleData[moduleId]) {
-            setTitle(moduleData[moduleId].title);
-            setContent(moduleData[moduleId].content);
-            
-            // Calcular navegación entre módulos
-            const currentIndex = modulesList.findIndex(m => m.id === moduleId);
-            const prevModule = currentIndex > 0 ? modulesList[currentIndex - 1] : null;
-            const nextModule = currentIndex < modulesList.length - 1 ? modulesList[currentIndex + 1] : null;
-            
-            setNavigation({
-              prev: prevModule ? { title: prevModule.label, id: prevModule.id } : null,
-              next: nextModule ? { title: nextModule.label, id: nextModule.id } : null,
+            setPageData({
+              title: moduleData[moduleId].title,
+              content: moduleData[moduleId].content,
+              navigation
             });
           } else {
-            setTitle('Módulo no encontrado');
-            setContent('El módulo solicitado no existe.');
-            setNavigation({ prev: null, next: null });
+            setPageData({
+              title: 'Módulo no encontrado',
+              content: 'El módulo solicitado no existe.',
+              navigation: { prev: null, next: null }
+            });
           }
         } else {
           // Para otras páginas (introducción, guías, faq)
-          const { docsContent } = await import('../data/docs') as { docsContent: Record<string, any> };
-          
           const pathParts = currentPath.split('/').filter(Boolean);
-          let data = docsContent;
+          let data = (docsStatic as any).docsContent;
           
           for (const part of pathParts) {
             data = data[part];
@@ -90,24 +105,33 @@ export default function GenericPage({ currentPath }: GenericPageProps) {
           }
           
           if (data) {
-            setTitle(data.title);
-            setContent(data.content);
+            setPageData({
+              title: data.title,
+              content: data.content,
+              navigation: { prev: null, next: null }
+            });
           } else {
-            setTitle('Página no encontrada');
-            setContent('El contenido solicitado no existe.');
+            setPageData({
+              title: 'Página no encontrada',
+              content: 'El contenido solicitado no existe.',
+              navigation: { prev: null, next: null }
+            });
           }
-          
-          setNavigation({ prev: null, next: null });
         }
       } catch (err) {
-        setTitle('Error');
-        setContent('Hubo un error al cargar el contenido.');
-        setNavigation({ prev: null, next: null });
+        setPageData({
+          title: 'Error',
+          content: 'Hubo un error al cargar el contenido.',
+          navigation: { prev: null, next: null }
+        });
       }
     };
 
     loadContent();
-  }, [currentPath]);
+  }, [currentPath, navigation]);
+
+  const { title, content } = pageData;
+  const isModulePage = currentPath.startsWith('/modulos/');
 
   return (
     <div className="w-full space-y-8">
@@ -130,7 +154,7 @@ export default function GenericPage({ currentPath }: GenericPageProps) {
       </article>
 
       {/* Navegación entre módulos */}
-      {currentPath.startsWith('/modulos/') && (navigation.prev || navigation.next) && (
+      {isModulePage && (navigation.prev || navigation.next) && (
         <nav className="flex gap-4 pt-8 border-t border-gray-200 dark:border-gray-800">
           {navigation.prev ? (
             <a
@@ -169,7 +193,7 @@ export default function GenericPage({ currentPath }: GenericPageProps) {
       )}
 
       {/* Back to Modules */}
-      {currentPath.startsWith('/modulos/') && (
+      {isModulePage && (
         <div className="text-center pt-4">
           <a
             href="/modulos"

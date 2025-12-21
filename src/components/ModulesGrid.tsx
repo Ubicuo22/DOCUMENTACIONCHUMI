@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { modulesList, priorityLevels } from '../data/modules/index';
 import * as Icons from 'lucide-react';
 
@@ -12,9 +12,14 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, onNavigate }) => {
   const IconComponent = (Icons as any)[module.icon] || Icons.Package;
   const priority = priorityLevels[module.priority as keyof typeof priorityLevels];
 
+  // ✅ OPTIMIZACIÓN 1: Memoizar callback para evitar re-renders innecesarios
+  const handleClick = useCallback(() => {
+    onNavigate(module.id);
+  }, [module.id, onNavigate]);
+
   return (
     <button
-      onClick={() => onNavigate(module.id)}
+      onClick={handleClick}
       className={`group relative h-full overflow-hidden rounded-xl border-2 transition-all duration-300 hover:shadow-2xl hover:scale-105 active:scale-95 ${module.borderColor} ${module.bgColor} p-6 text-left hover:border-opacity-100 hover:shadow-lg cursor-pointer`}
     >
       {/* Fondo gradiente de hover */}
@@ -75,23 +80,30 @@ interface ModulesGridProps {
 }
 
 export const ModulesGrid: React.FC<ModulesGridProps> = ({ onModuleClick }) => {
-  const handleNavigate = (moduleId: string) => {
+  // ✅ OPTIMIZACIÓN 2: Usar History API en lugar de window.location.href
+  // Esto evita recarga completa de página y preserva estado
+  const handleNavigate = useCallback((moduleId: string) => {
+    // Si hay callback personalizado, usarlo
     if (onModuleClick) {
       onModuleClick(moduleId);
     } else {
-      // ✅ Navegar a la página del módulo en /modulos/{id}
-      window.location.href = `/modulos/${moduleId}`;
+      // Si no, usar History API para navegar sin recargar
+      window.history.pushState({}, '', `/modulos/${moduleId}`);
+      // Notificar al Router en App.tsx (via evento custom)
+      window.dispatchEvent(new CustomEvent('navigate', { detail: { path: `/modulos/${moduleId}` } }));
     }
-  };
+  }, [onModuleClick]);
 
-  // Agrupar módulos por categoría
-  const modulesByCategory = modulesList.reduce((acc, module) => {
-    if (!acc[module.category]) {
-      acc[module.category] = [];
-    }
-    acc[module.category].push(module);
-    return acc;
-  }, {} as Record<string, typeof modulesList>);
+  // ✅ OPTIMIZACIÓN 3: Agrupar módulos por categoría
+  const modulesByCategory = useMemo(() => {
+    return modulesList.reduce((acc, module) => {
+      if (!acc[module.category]) {
+        acc[module.category] = [];
+      }
+      acc[module.category].push(module);
+      return acc;
+    }, {} as Record<string, typeof modulesList>);
+  }, []);
 
   return (
     <div className="w-full space-y-12">

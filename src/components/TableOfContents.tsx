@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface TableOfContentsProps {
   contentRef: React.RefObject<HTMLElement>;
@@ -7,6 +7,8 @@ interface TableOfContentsProps {
 export function TableOfContents({ contentRef }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
   const [activeId, setActiveId] = useState<string>('');
+  // ✅ OPTIMIZACIÓN 4: Guardar referencia al observer para limpiar correctamente
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -27,7 +29,15 @@ export function TableOfContents({ contentRef }: TableOfContentsProps) {
   }, [contentRef]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    // ✅ Limpiar observer anterior si existe
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    // ✅ Crear nuevo observer solo si hay headings
+    if (headings.length === 0) return;
+
+    observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -39,10 +49,15 @@ export function TableOfContents({ contentRef }: TableOfContentsProps) {
     );
 
     document.querySelectorAll('h2, h3').forEach((el) => {
-      observer.observe(el);
+      observerRef.current?.observe(el);
     });
 
-    return () => observer.disconnect();
+    // ✅ Limpiar observer en unmount
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
   }, [headings]);
 
   if (headings.length === 0) return null;
