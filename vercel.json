@@ -1,4 +1,6 @@
 {
+  "buildCommand": "./build.sh",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/(.*)",
