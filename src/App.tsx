@@ -5,7 +5,6 @@ import { HomePage } from './pages/HomePage';
 import GenericPage from './pages/GenericPage.tsx';
 import { ModulesPage } from './pages/ModulesPage';
 import { FAQPage } from './pages/FAQPage';
-import { TableOfContents } from './components/TableOfContents';
 import { Footer } from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
 import './index.css';
@@ -216,9 +215,7 @@ function Router() {
               {renderPage()}
             </div>
 
-            <div className="hidden xl:block">
-              <TableOfContents contentRef={contentRef} />
-            </div>
+          {/* TableOfContents desactivado */}
           </div>
         </main>
       </div>
