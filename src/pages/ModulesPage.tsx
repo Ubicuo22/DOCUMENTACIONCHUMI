@@ -4,8 +4,23 @@ import * as Icons from 'lucide-react';
 import { Search, ChevronDown, ArrowRight } from 'lucide-react';
 
 interface ModulesPageProps {
-  onNavigate?: (moduleId: string) => void;
+  onNavigate?: (path: string) => void;
 }
+
+// Colores para cada módulo
+const MODULE_COLORS: Record<string, { bar: string; icon: string; text: string; textHover: string; border: string }> = {
+  recibos: { bar: 'from-blue-400 to-blue-600', icon: 'text-blue-500', text: 'text-blue-600 dark:text-blue-400', textHover: 'group-hover:text-blue-700 dark:group-hover:text-blue-300', border: 'hover:border-blue-300 dark:hover:border-blue-700' },
+  precios: { bar: 'from-green-400 to-green-600', icon: 'text-green-500', text: 'text-green-600 dark:text-green-400', textHover: 'group-hover:text-green-700 dark:group-hover:text-green-300', border: 'hover:border-green-300 dark:hover:border-green-700' },
+  clientes: { bar: 'from-purple-400 to-purple-600', icon: 'text-purple-500', text: 'text-purple-600 dark:text-purple-400', textHover: 'group-hover:text-purple-700 dark:group-hover:text-purple-300', border: 'hover:border-purple-300 dark:hover:border-purple-700' },
+  inventario: { bar: 'from-pink-400 to-pink-600', icon: 'text-pink-500', text: 'text-pink-600 dark:text-pink-400', textHover: 'group-hover:text-pink-700 dark:group-hover:text-pink-300', border: 'hover:border-pink-300 dark:hover:border-pink-700' },
+  deudas: { bar: 'from-red-400 to-red-600', icon: 'text-red-500', text: 'text-red-600 dark:text-red-400', textHover: 'group-hover:text-red-700 dark:group-hover:text-red-300', border: 'hover:border-red-300 dark:hover:border-red-700' },
+  usuarios: { bar: 'from-indigo-400 to-indigo-600', icon: 'text-indigo-500', text: 'text-indigo-600 dark:text-indigo-400', textHover: 'group-hover:text-indigo-700 dark:group-hover:text-indigo-300', border: 'hover:border-indigo-300 dark:hover:border-indigo-700' },
+  compras: { bar: 'from-cyan-400 to-cyan-600', icon: 'text-cyan-500', text: 'text-cyan-600 dark:text-cyan-400', textHover: 'group-hover:text-cyan-700 dark:group-hover:text-cyan-300', border: 'hover:border-cyan-300 dark:hover:border-cyan-700' },
+  reportes: { bar: 'from-amber-400 to-amber-600', icon: 'text-amber-500', text: 'text-amber-600 dark:text-amber-400', textHover: 'group-hover:text-amber-700 dark:group-hover:text-amber-300', border: 'hover:border-amber-300 dark:hover:border-amber-700' },
+  ubicuoai: { bar: 'from-teal-400 to-teal-600', icon: 'text-teal-500', text: 'text-teal-600 dark:text-teal-400', textHover: 'group-hover:text-teal-700 dark:group-hover:text-teal-300', border: 'hover:border-teal-300 dark:hover:border-teal-700' },
+  dispositivos: { bar: 'from-orange-400 to-orange-600', icon: 'text-orange-500', text: 'text-orange-600 dark:text-orange-400', textHover: 'group-hover:text-orange-700 dark:group-hover:text-orange-300', border: 'hover:border-orange-300 dark:hover:border-orange-700' },
+  faq: { bar: 'from-yellow-400 to-yellow-600', icon: 'text-yellow-500', text: 'text-yellow-600 dark:text-yellow-400', textHover: 'group-hover:text-yellow-700 dark:group-hover:text-yellow-300', border: 'hover:border-yellow-300 dark:hover:border-yellow-700' },
+};
 
 export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
   // ✅ ESTADO: Búsqueda y filtros
@@ -91,13 +106,12 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
     };
   }, [filteredModules]);
 
-  // ✅ OPTIMIZACIÓN 5: Callback para navegación
+  // ✅ OPTIMIZACIÓN 5: Callback para navegación (SIN useNavigate)
   const handleModuleClick = useCallback((moduleId: string) => {
     if (onNavigate) {
-      onNavigate(moduleId);
+      onNavigate(`/modulos/${moduleId}`);
     } else {
-      window.history.pushState({}, '', `/modulos/${moduleId}`);
-      window.dispatchEvent(new CustomEvent('navigate', { detail: { path: `/modulos/${moduleId}` } }));
+      window.location.href = `/modulos/${moduleId}`;
     }
   }, [onNavigate]);
 
@@ -166,7 +180,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
             placeholder="Buscar módulo por nombre o descripción..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 transition"
+            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition"
           />
         </div>
 
@@ -181,7 +195,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 transition"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition"
               >
                 {categories.map(cat => (
                   <option key={cat.value} value={cat.value}>
@@ -202,7 +216,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
               <select
                 value={selectedPriority}
                 onChange={(e) => setSelectedPriority(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 transition"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition"
               >
                 {priorities.map(pri => (
                   <option key={pri.value} value={pri.value}>
@@ -223,7 +237,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 transition"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition"
               >
                 <option value="name">Nombre (A-Z)</option>
                 <option value="priority">Prioridad (Mayor a Menor)</option>
@@ -242,7 +256,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
               setSelectedCategory('all');
               setSelectedPriority('all');
             }}
-            className="text-sm text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-medium transition"
+            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition"
           >
             Limpiar Filtros
           </button>
@@ -255,21 +269,22 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
           {filteredModules.map((module) => {
             const IconComponent = (Icons as any)[module.icon] || Icons.Package;
             const priority = priorityLevels[module.priority as keyof typeof priorityLevels];
+            const colors = MODULE_COLORS[module.id] || MODULE_COLORS.dispositivos;
 
             return (
               <button
                 key={module.id}
                 onClick={() => handleModuleClick(module.id)}
-                className="group relative h-full overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-700 p-6 text-left"
+                className={`group relative h-full overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-lg ${colors.border} p-6 text-left`}
               >
-                {/* Indicador de arriba */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                {/* Indicador de arriba con color del módulo */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${colors.bar} opacity-0 group-hover:opacity-100 transition-opacity`} />
 
                 {/* Contenido */}
                 <div className="space-y-4">
                   {/* Header */}
                   <div className="flex items-start justify-between">
-                    <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                    <div className={`p-3 rounded-lg bg-gray-100 dark:bg-gray-800 ${colors.icon}`}>
                       <IconComponent size={24} strokeWidth={1.5} />
                     </div>
                     <div className={`text-xs font-bold px-2.5 py-1 rounded-full ${priority.bgColor} ${priority.color}`}>
@@ -279,7 +294,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
 
                   {/* Título */}
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                    <h3 className={`text-lg font-bold text-gray-900 dark:text-white ${colors.textHover} transition-colors`}>
                       {module.label}
                     </h3>
                   </div>
@@ -302,7 +317,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
                   </div>
 
                   {/* CTA */}
-                  <div className="flex items-center gap-2 text-sm font-semibold text-orange-600 dark:text-orange-400 group-hover:gap-3 transition-all pt-2">
+                  <div className={`flex items-center gap-2 text-sm font-semibold ${colors.text} group-hover:gap-3 transition-all pt-2`}>
                     <span>Ver Documentación</span>
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -326,7 +341,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
               setSelectedCategory('all');
               setSelectedPriority('all');
             }}
-            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium"
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
           >
             Limpiar Filtros
           </button>
@@ -338,7 +353,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h4 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              <Icons.BookOpen size={18} className="text-orange-500" />
+              <Icons.BookOpen size={18} className="text-blue-500" />
               Documentación Completa
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -347,7 +362,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
           </div>
           <div>
             <h4 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              <Icons.Zap size={18} className="text-orange-500" />
+              <Icons.Zap size={18} className="text-blue-500" />
               Aprendizaje Estructurado
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -356,7 +371,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({ onNavigate }) => {
           </div>
           <div>
             <h4 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              <Icons.Target size={18} className="text-orange-500" />
+              <Icons.Target size={18} className="text-blue-500" />
               Soporte Disponible
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
