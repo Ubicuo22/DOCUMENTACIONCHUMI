@@ -4,7 +4,6 @@ import { Sidebar } from './components/Sidebar';
 import { HomePage } from './pages/HomePage';
 import GenericPage from './pages/GenericPage.tsx';
 import { ModulesPage } from './pages/ModulesPage';
-import { FAQModules } from './pages/FAQModules';
 import { FAQPage } from './pages/FAQPage';
 import { TableOfContents } from './components/TableOfContents';
 import { Footer } from './components/Footer';
@@ -23,7 +22,7 @@ const BREADCRUMB_TITLES: Record<string, string> = {
 type PageType = 
   | { type: 'home' }
   | { type: 'modules' }
-  | { type: 'faq-modules' }
+  | { type: 'faq' }
   | { type: 'faq' }
   | { type: 'generic'; path: string }
   | { type: '404' };
@@ -109,8 +108,8 @@ function Router() {
     if (currentPath === '/modulos') {
       return { type: 'modules' };
     }
-    if (currentPath === '/faq/modules') {
-      return { type: 'faq-modules' };
+    if (currentPath === '/faq') {
+      return { type: 'faq' };
     }
     if (currentPath === '/faq') {
       return { type: 'faq' };
@@ -124,7 +123,7 @@ function Router() {
       currentPath.startsWith('/modulos/') ||
       currentPath.startsWith('/guias/') ||
       currentPath.startsWith('/introduccion/') ||
-      (currentPath.startsWith('/faq/') && currentPath !== '/faq/modules')
+      (currentPath.startsWith('/faq/') && currentPath !== '/faq')
     ) {
       return { type: 'generic', path: currentPath };
     }
@@ -153,8 +152,8 @@ function Router() {
       case 'modules':
         return <ModulesPage onNavigate={handleCustomNavigate} />;
       
-      case 'faq-modules':
-        return <FAQModules onNavigate={handleCustomNavigate} />;
+      case 'faq':
+        return <FAQPage />;
       
       case 'faq':
         return <FAQPage />;

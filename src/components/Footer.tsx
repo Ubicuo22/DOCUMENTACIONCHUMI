@@ -33,7 +33,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/faq/modules" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 transition">
+                <a href="/faq" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 transition">
                   Preguntas Frecuentes
                 </a>
               </li>

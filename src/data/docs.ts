@@ -53,7 +53,7 @@ export const sidebarItems = [
   {
     section: "Preguntas Frecuentes",
     items: [
-      { label: "Centro de FAQs", href: "/faq/modules", icon: "HelpCircle" }
+      { label: "Centro de FAQs", href: "/faq", icon: "HelpCircle" }
     ]
   }
 ];

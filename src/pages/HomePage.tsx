@@ -61,7 +61,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             Explora los Módulos →
           </button>
           <a
-            href="/faq/modules"
+            href="/faq"
             className="px-8 py-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
           >
             Preguntas Frecuentes
@@ -115,7 +115,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
           {quickAccessLinks.map((link) => (
             <a
               key={link.id}
-              href={link.id === 'modules' ? '/modulos' : link.id === 'faq' ? '/faq/modules' : '#'}
+              href={link.id === 'modules' ? '/modulos' : link.id === 'faq' ? '/faq' : '#'}
               className="p-6 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 hover:shadow-lg transition-shadow"
             >
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{link.label}</h3>
