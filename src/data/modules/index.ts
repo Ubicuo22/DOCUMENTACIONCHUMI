@@ -1,18 +1,8 @@
 // Centralizar exports de todos los módulos
 // Ubicación: src/data/modules/index.ts
+// ✅ OPTIMIZADO: Solo importaciones dinámicas para evitar advertencias de Vite
 
-export { recibos } from './recibos';
-export { clientes } from './clientes';
-export { inventario } from './inventario';
-export { precios } from './precios';
-export { cotizaciones } from './cotizaciones';
-export { reportes } from './reportes';
-export { deudas } from './deudas';
-export { dispositivos } from './dispositivos';
-export { usuarios } from './usuarios';
-export { ubicuoai } from './ubicuoai';
-
-// Mapa de módulos para acceso rápido con lazy loading
+// ===== LAZY LOADING: Mapa de módulos con importaciones dinámicas =====
 export const modulesMap = {
   recibos: () => import('./recibos').then(m => m.recibos),
   clientes: () => import('./clientes').then(m => m.clientes),
@@ -24,6 +14,15 @@ export const modulesMap = {
   dispositivos: () => import('./dispositivos').then(m => m.dispositivos),
   usuarios: () => import('./usuarios').then(m => m.usuarios),
   ubicuoai: () => import('./ubicuoai').then(m => m.ubicuoai),
+};
+
+// ===== HELPER: Carga un módulo por su ID =====
+export const loadModule = async (moduleId: string) => {
+  const loader = modulesMap[moduleId as keyof typeof modulesMap];
+  if (!loader) {
+    throw new Error(`Módulo "${moduleId}" no encontrado`);
+  }
+  return await loader();
 };
 
 // ===== NUEVA ESTRUCTURA: Metadata completa de módulos =====

@@ -17,11 +17,10 @@ const BREADCRUMB_TITLES: Record<string, string> = {
   introduccion: 'Introducción',
 };
 
-// ✅ OPTIMIZACIÓN: Type para currentPage
+// ✅ OPTIMIZACIÓN: Type para currentPage (CORREGIDO - eliminado duplicado)
 type PageType = 
   | { type: 'home' }
   | { type: 'modules' }
-  | { type: 'faq' }
   | { type: 'faq' }
   | { type: 'generic'; path: string }
   | { type: '404' };
@@ -100,15 +99,13 @@ function Router() {
 
   // ✅ OPTIMIZACIÓN 6: Memoizar lógica de renderizado de página
   // ACTUALIZADO: GenericPage ahora maneja /guias, /introduccion y /faq/:id
+  // CORREGIDO: Eliminado caso duplicado de 'faq'
   const currentPage: PageType = useMemo(() => {
     if (currentPath === '/') {
       return { type: 'home' };
     }
     if (currentPath === '/modulos') {
       return { type: 'modules' };
-    }
-    if (currentPath === '/faq') {
-      return { type: 'faq' };
     }
     if (currentPath === '/faq') {
       return { type: 'faq' };
@@ -142,7 +139,7 @@ function Router() {
     setIsSidebarCollapsed(prev => !prev);
   }, []);
 
-  // ✅ OPTIMIZACIÓN 8: Renderizado condicional optimizado
+  // ✅ OPTIMIZACIÓN 8: Renderizado condicional optimizado (CORREGIDO - eliminado caso duplicado)
   const renderPage = () => {
     switch (currentPage.type) {
       case 'home':
@@ -150,9 +147,6 @@ function Router() {
       
       case 'modules':
         return <ModulesPage onNavigate={handleCustomNavigate} />;
-      
-      case 'faq':
-        return <FAQPage />;
       
       case 'faq':
         return <FAQPage />;
