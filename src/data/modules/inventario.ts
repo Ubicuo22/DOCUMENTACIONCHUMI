@@ -1,180 +1,31 @@
 export const inventario = {
-  title: "Módulo Inventario",
+  title: "Módulo Gestión de Compras",
   icon: "Package",
   content: `
-<div class="space-y-12">
-  <!-- INTRO -->
-  <section className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 p-8 rounded-lg border border-indigo-200 dark:border-indigo-800">
-    <h2 className="text-3xl font-bold text-indigo-900 dark:text-indigo-300 mb-4">Módulo Inventario</h2>
-    <p className="text-indigo-800 dark:text-indigo-200 text-lg leading-relaxed">
-      Administra el stock de tus productos en tiempo real. Registra compras, monitorea existencias, recibe alertas automáticas 
-      y mantén control total de lo que tienes disponible para vender.
-    </p>
-  </section>
-
-  <!-- POR QUÉ IMPORTA -->
-  <section className="space-y-6">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">📦 ¿Por Qué es Crítico?</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="flex gap-4 p-6 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-        <span className="text-4xl flex-shrink-0">💰</span>
-        <div>
-          <p className="font-semibold text-gray-900 dark:text-white mb-2">Dinero Atrapado</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Sin control, tu dinero se queda en productos que no se venden</p>
-        </div>
-      </div>
-
-      <div className="flex gap-4 p-6 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-        <span className="text-4xl flex-shrink-0">😢</span>
-        <div>
-          <p className="font-semibold text-gray-900 dark:text-white mb-2">Perder Ventas</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Sin stock, cliente se va con la competencia</p>
-        </div>
-      </div>
-
-      <div className="flex gap-4 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-        <span className="text-4xl flex-shrink-0">⚠️</span>
-        <div>
-          <p className="font-semibold text-gray-900 dark:text-white mb-2">Productos Vencidos</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Sin visibilidad, productos se vencen sin darte cuenta</p>
-        </div>
-      </div>
-
-      <div className="flex gap-4 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-        <span className="text-4xl flex-shrink-0">📊</span>
-        <div>
-          <p className="font-semibold text-gray-900 dark:text-white mb-2">Decisiones Ciegas</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Sin datos, compras mal y no sabes qué vende</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WORKFLOW PRINCIPAL -->
-  <section className="space-y-6">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">🎯 Workflow: Ciclo Completo de Producto</h2>
-    <p className="text-lg text-gray-600 dark:text-gray-400">Desde que llega hasta que se vende:</p>
-    
-    <div className="space-y-4">
-      <!-- PASO 1 -->
-      <div className="relative">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg">1</div>
-            <div className="w-1 h-12 bg-gradient-to-b from-blue-500 to-green-500 mt-2"></div>
+<div class="space-y-16 max-w-7xl mx-auto">
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 rounded-2xl shadow-2xl">
+    <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
+    <div class="relative p-8 md:p-12 lg:p-16">
+      <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+        <div class="flex-shrink-0">
+          <div class="w-20 h-20 md:w-24 md:h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl">
+            <span class="text-5xl md:text-6xl">📦</span>
           </div>
-          <div className="pb-8 pt-2">
-            <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-700 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-blue-900 dark:text-blue-300 mb-3">🚚 Compra Llega</h3>
-              <p className="text-blue-800 dark:text-blue-200 mb-4">Distribuidor entrega productos nuevos</p>
-              <div className="bg-white dark:bg-slate-900 p-4 rounded border border-blue-200 dark:border-blue-800 text-sm font-mono">
-                <div>Papa Blanca: 100 kg</div>
-                <div>Precio: $10/kg</div>
-                <div>Proveedor: Distribuidor XYZ</div>
-              </div>
+        </div>
+        <div class="flex-1 text-center md:text-left">
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4">Gestión de Compras</h1>
+          <p class="text-lg md:text-xl text-white leading-relaxed mb-6 max-w-3xl">
+            Controla stock en tiempo real, registra compras y <span class="font-bold text-yellow-300">afecta el inventario automáticamente</span>. Mantén historial completo con información fiscal opcional.
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+            <div class="inline-flex items-center gap-2 bg-yellow-400/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-yellow-300 shadow-lg">
+              <span class="text-2xl">📊</span>
+              <p class="text-sm font-bold text-gray-900">Stock en tiempo real</p>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASO 2 -->
-      <div className="relative">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg">2</div>
-            <div className="w-1 h-12 bg-gradient-to-b from-green-500 to-purple-500 mt-2"></div>
-          </div>
-          <div className="pb-8 pt-2">
-            <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-300 dark:border-green-700 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-3">✅ Registras Compra</h3>
-              <p className="text-green-800 dark:text-green-200 mb-4">En Módulo Inventario, haz clic [+ Registrar Compra]</p>
-              <div className="bg-white dark:bg-slate-900 p-4 rounded border border-green-200 dark:border-green-800 text-sm space-y-2">
-                <div>Producto: Papa Blanca</div>
-                <div>Cantidad: 100 kg</div>
-                <div>Costo: $1,000 total</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASO 3 -->
-      <div className="relative">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg">3</div>
-            <div className="w-1 h-12 bg-gradient-to-b from-purple-500 to-amber-500 mt-2"></div>
-          </div>
-          <div className="pb-8 pt-2">
-            <div className="bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-300 dark:border-purple-700 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-purple-900 dark:text-purple-300 mb-3">🔄 Sistema Actualiza Stock</h3>
-              <p className="text-purple-800 dark:text-purple-200 mb-4">Stock se aumenta automáticamente</p>
-              <div className="bg-white dark:bg-slate-900 p-4 rounded border border-purple-200 dark:border-purple-800 text-sm font-mono space-y-2">
-                <div>Stock anterior: 20 kg</div>
-                <div className="text-green-600 dark:text-green-400">+ Compra: 100 kg</div>
-                <div className="font-bold text-purple-600 dark:text-purple-400">= Stock nuevo: 120 kg</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASO 4 -->
-      <div className="relative">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg">4</div>
-            <div className="w-1 h-12 bg-gradient-to-b from-amber-500 to-red-500 mt-2"></div>
-          </div>
-          <div className="pb-8 pt-2">
-            <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-amber-900 dark:text-amber-300 mb-3">🛒 Vendedor Vende</h3>
-              <p className="text-amber-800 dark:text-amber-200 mb-4">Cliente compra parte del producto</p>
-              <div className="bg-white dark:bg-slate-900 p-4 rounded border border-amber-200 dark:border-amber-800 text-sm space-y-2">
-                <div>Cliente compra: 30 kg papa</div>
-                <div>Se registra automáticamente</div>
-                <div>Recibo generado</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASO 5 -->
-      <div className="relative">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg">5</div>
-            <div className="w-1 h-12 bg-gradient-to-b from-red-500 to-cyan-500 mt-2"></div>
-          </div>
-          <div className="pb-8 pt-2">
-            <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-300 dark:border-red-700 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-3">⬇️ Stock Descuenta</h3>
-              <p className="text-red-800 dark:text-red-200 mb-4">Sistema descuenta automáticamente</p>
-              <div className="bg-white dark:bg-slate-900 p-4 rounded border border-red-200 dark:border-red-800 text-sm font-mono space-y-2">
-                <div>Stock: 120 kg</div>
-                <div className="text-red-600 dark:text-red-400">- Venta: 30 kg</div>
-                <div className="font-bold text-red-600 dark:text-red-400">= Stock nuevo: 90 kg</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASO 6 -->
-      <div className="relative">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg">6</div>
-          </div>
-          <div className="pt-2">
-            <div className="bg-cyan-50 dark:bg-cyan-900/20 border-2 border-cyan-300 dark:border-cyan-700 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-cyan-900 dark:text-cyan-300 mb-3">✅ Monitoreo Continuo</h3>
-              <p className="text-cyan-800 dark:text-cyan-200 mb-4">Sistema alertará si stock baja del mínimo</p>
-              <div className="bg-white dark:bg-slate-900 p-4 rounded border border-cyan-200 dark:border-cyan-800 text-sm space-y-2">
-                <div>🟢 Stock: 90 kg | Mínimo: 30 kg</div>
-                <div>✓ Todo normal, stock saludable</div>
-              </div>
+            <div class="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-white shadow-lg">
+              <span class="text-2xl">🧾</span>
+              <p class="text-sm font-bold text-gray-900">Info fiscal opcional</p>
             </div>
           </div>
         </div>
@@ -182,240 +33,308 @@ export const inventario = {
     </div>
   </section>
 
-  <!-- ESTADOS DE STOCK -->
-  <section className="space-y-6">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">🟢 Estados del Stock</h2>
-    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-4xl">🟢</span>
-          <h3 className="text-2xl font-bold text-green-900 dark:text-green-300">NORMAL</h3>
-        </div>
-        <p className="text-green-800 dark:text-green-200 mb-3">Stock por encima del mínimo</p>
-        <div className="bg-white dark:bg-slate-900 p-3 rounded border border-green-200 dark:border-green-800 text-sm space-y-1">
-          <div>✓ Suficiente para vender</div>
-          <div>✓ No necesita compra urgente</div>
-          <div>✓ Todo bien</div>
-        </div>
+  <!-- IMG 1: VENTANA PRINCIPAL -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">1</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Ventana Principal</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Registro de compras</p></div>
+    </div>
+    <div class="group relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+      <div class="overflow-hidden rounded-xl shadow-2xl mb-4 border-2 border-gray-300 dark:border-gray-600">
+        <img src="/inventario/1.png" alt="Ventana Principal Gestión Compras" class="w-full transition-transform duration-300 group-hover:scale-[1.02]"/>
       </div>
-
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg border border-yellow-200 dark:border-yellow-800">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-4xl">🟡</span>
-          <h3 className="text-2xl font-bold text-yellow-900 dark:text-yellow-300">BAJO</h3>
-        </div>
-        <p className="text-yellow-800 dark:text-yellow-200 mb-3">Cerca del mínimo</p>
-        <div className="bg-white dark:bg-slate-900 p-3 rounded border border-yellow-200 dark:border-yellow-800 text-sm space-y-1">
-          <div>⚠️ Prepara compra</div>
-          <div>⚠️ Pronto se agota</div>
-          <div>⚠️ Actúa pronto</div>
-        </div>
-      </div>
-
-      <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-4xl">🔴</span>
-          <h3 className="text-2xl font-bold text-red-900 dark:text-red-300">AGOTADO</h3>
-        </div>
-        <p className="text-red-800 dark:text-red-200 mb-3">Debajo del mínimo</p>
-        <div className="bg-white dark:bg-slate-900 p-3 rounded border border-red-200 dark:border-red-800 text-sm space-y-1">
-          <div>🚨 COMPRA YA</div>
-          <div>🚨 Riesgo de perder venta</div>
-          <div>🚨 Acción inmediata</div>
-        </div>
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 md:p-6 rounded-xl border-2 border-indigo-200 dark:border-indigo-800">
+        <p class="font-semibold text-indigo-900 dark:text-indigo-300 mb-3 flex items-center gap-2"><span class="text-xl">ℹ️</span>Vista General:</p>
+        <p class="text-sm md:text-base text-indigo-800 dark:text-indigo-200">Ventana principal para <strong>Registro de Compras</strong>. Vamos por partes.</p>
       </div>
     </div>
   </section>
 
-  <!-- PASOS PRÁCTICOS -->
-  <section className="space-y-6">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">🛠️ Pasos Prácticos</h2>
-    
-    <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-      <h3 className="text-2xl font-bold text-blue-900 dark:text-blue-300 mb-6">Registrar una Compra</h3>
-      <div className="space-y-4">
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">1️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Abre Módulo Inventario</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Menú → Módulos → Gestionar Inventario</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">2️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Ve a Pestaña "Compras"</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">O haz clic [+ Registrar Compra]</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">3️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Selecciona el Producto</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Elige de lista o busca por nombre</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">4️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Ingresa Cantidad</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Solo números: 100</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">5️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Ingresa Costo Unitario</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Precio que pagaste: 10</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">6️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Guarda [Guardar Compra]</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Stock aumenta automáticamente</p>
-          </div>
-        </div>
-      </div>
+  <!-- IMG 2: INFORMACIÓN DE COMPRA -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">2</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Información de Compra</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Buscar producto</p></div>
     </div>
-
-    <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
-      <h3 className="text-2xl font-bold text-green-900 dark:text-green-300 mb-6">Ver Stock Actual</h3>
-      <div className="space-y-4">
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-green-200 dark:border-green-800">
-          <span className="text-2xl flex-shrink-0">1️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Abre Módulo Inventario</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Pestaña "Productos" o "Stock"</p>
-          </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 p-6 md:p-8 rounded-2xl border-2 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-purple-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-purple-300 dark:border-purple-600">
+          <img src="/inventario/2.png" alt="Información de Compra" class="w-full transition-transform duration-300 group-hover:scale-105"/>
         </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-green-200 dark:border-green-800">
-          <span className="text-2xl flex-shrink-0">2️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Ve la Tabla de Stock</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Muestra: Producto | Stock | Mínimo | Estado</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-green-200 dark:border-green-800">
-          <span className="text-2xl flex-shrink-0">3️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Busca por Nombre</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Campo: Buscar "papa" o "tomate"</p>
-          </div>
-        </div>
-        <div className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded border border-green-200 dark:border-green-800">
-          <span className="text-2xl flex-shrink-0">4️⃣</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Interpreta los Colores</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">🟢 Normal | 🟡 Bajo | 🔴 Agotado</p>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-purple-200 dark:border-purple-800">
+          <p class="text-sm md:text-base text-purple-800 dark:text-purple-200 mb-3">En esta sección se buscará el <strong>producto del que se quieren registrar compras</strong>.</p>
+          <div class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg mt-3">
+            <p class="text-sm text-purple-700 dark:text-purple-300 flex items-center gap-2">
+              <span class="text-lg">⚠️</span>
+              <span><strong>Importante:</strong> Esto afectará el stock general</span>
+            </p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CONFIGURACIÓN IMPORTANTE -->
-  <section className="space-y-6">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">⚙️ Configuración: Stock Mínimo</h2>
-    
-    <div className="bg-white dark:bg-slate-900 p-8 rounded-lg border border-gray-200 dark:border-gray-800">
-      <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">El "Stock Mínimo" es CRÍTICO. Define cuándo comprar:</p>
-      
-      <div className="space-y-4">
-        <div className="flex gap-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800">
-          <span className="text-2xl flex-shrink-0">🔍</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">¿Cómo Calcular?</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Stock Mínimo = Ventas promedio semanal × 2</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Si vendes 50 kg papa/semana → Mínimo: 100 kg</p>
-          </div>
+  <!-- IMG 3: BÚSQUEDA PRODUCTOS -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">3</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Búsqueda de Productos</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Hasta 20 coincidencias</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 p-6 md:p-8 rounded-2xl border-2 border-green-200 dark:border-green-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-green-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-green-300 dark:border-green-600">
+          <img src="/inventario/3.png" alt="Búsqueda Productos" class="w-full transition-transform duration-300 group-hover:scale-105"/>
         </div>
-
-        <div className="flex gap-4 p-4 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
-          <span className="text-2xl flex-shrink-0">✅</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Mínimo Bien Configurado</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Sistema alerta a tiempo para comprar antes de agotarse</p>
-          </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-green-200 dark:border-green-800">
+          <p class="text-sm md:text-base text-green-800 dark:text-green-200">Si buscamos <strong>"aguacate"</strong>, arrojará los <strong>20 productos que coincidan</strong> con aguacate o sus variables.</p>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div className="flex gap-4 p-4 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
-          <span className="text-2xl flex-shrink-0">❌</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Mínimo Muy Bajo</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Esperas demasiado para comprar → Pierdes ventas</p>
-          </div>
+  <!-- IMG 4: DATOS COMPRA -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">4</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Datos de Compra</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Cantidad, precio, IVA, fechas</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 p-6 md:p-8 rounded-2xl border-2 border-amber-200 dark:border-amber-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-amber-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-amber-300 dark:border-amber-600">
+          <img src="/inventario/4.png" alt="Datos de Compra" class="w-full transition-transform duration-300 group-hover:scale-105"/>
         </div>
-
-        <div className="flex gap-4 p-4 bg-orange-50 dark:bg-orange-900/20 rounded border border-orange-200 dark:border-orange-800">
-          <span className="text-2xl flex-shrink-0">❌</span>
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Mínimo Muy Alto</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Compras demasiado frecuente → Dinero atrapado</p>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-amber-200 dark:border-amber-800 space-y-2">
+          <p class="text-sm md:text-base text-amber-800 dark:text-amber-200 mb-3">Una vez seleccionado el producto, ingresar:</p>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+            <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 p-2 rounded"><span>📊</span><span>Cantidad</span></div>
+            <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 p-2 rounded"><span>💰</span><span>Precio/Unidad</span></div>
+            <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 p-2 rounded"><span>🧾</span><span>IVA (si aplica)</span></div>
+            <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 p-2 rounded"><span>📅</span><span>Fecha Compra</span></div>
+            <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 p-2 rounded"><span>📝</span><span>Fecha Registro</span></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ERRORES COMUNES -->
-  <section className="space-y-6">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">⚠️ Errores Comunes</h2>
-    
-    <div className="grid grid-cols-1 gap-4">
-      <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-        <p className="font-bold text-red-900 dark:text-red-300 mb-2">❌ No registrar compras</p>
-        <p className="text-red-800 dark:text-red-200 text-sm mb-3">Llega producto pero no lo registras en sistema</p>
-        <p className="text-red-700 dark:text-red-300 text-sm">✓ SIEMPRE registra cada compra. Sistema ajusta stock</p>
-      </div>
-
-      <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-        <p className="font-bold text-red-900 dark:text-red-300 mb-2">❌ Stock mínimo incorrecto</p>
-        <p className="text-red-800 dark:text-red-200 text-sm mb-3">Configuras mínimo aleatorio sin calcular</p>
-        <p className="text-red-700 dark:text-red-300 text-sm">✓ Calcula: Ventas promedio × 2</p>
-      </div>
-
-      <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-        <p className="font-bold text-red-900 dark:text-red-300 mb-2">❌ Ignorar alertas de bajo stock</p>
-        <p className="text-red-800 dark:text-red-200 text-sm mb-3">Sistema alerta 🔴 pero tú no compras</p>
-        <p className="text-red-700 dark:text-red-300 text-sm">✓ Cuando ves 🔴, compra inmediatamente</p>
-      </div>
-
-      <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-        <p className="font-bold text-red-900 dark:text-red-300 mb-2">❌ No revisar caducidades</p>
-        <p className="text-red-800 dark:text-red-200 text-sm mb-3">Productos vencidos sin tu conocimiento</p>
-        <p className="text-red-700 dark:text-red-300 text-sm">✓ Usa campo de caducidad. Revisa periódicamente</p>
+  <!-- IMG 5: RESUMEN COMPRA -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">5</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Resumen de Compra</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Total calculado</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 p-6 md:p-8 rounded-2xl border-2 border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-blue-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-blue-300 dark:border-blue-600">
+          <img src="/inventario/5.png" alt="Resumen de Compra" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-blue-200 dark:border-blue-800">
+          <p class="text-sm md:text-base text-blue-800 dark:text-blue-200">Esto ajustará en la parte de <strong>Resumen de Compra el total de la compra</strong> automáticamente.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- LO MÁS IMPORTANTE -->
-  <section className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-8 rounded-lg shadow-xl">
-    <h2 className="text-3xl font-bold mb-6">🎯 Lo MÁS Importante</h2>
-    
-    <ul className="space-y-4 text-lg">
-      <li className="flex gap-3">
-        <span className="flex-shrink-0 text-2xl">1️⃣</span>
-        <span><strong>REGISTRA cada compra</strong> - Sistema actualiza stock automáticamente</span>
-      </li>
-      <li className="flex gap-3">
-        <span className="flex-shrink-0 text-2xl">2️⃣</span>
-        <span><strong>Stock mínimo correcto</strong> - Compra a tiempo, evita perder ventas</span>
-      </li>
-      <li className="flex gap-3">
-        <span className="flex-shrink-0 text-2xl">3️⃣</span>
-        <span><strong>Respeta las alertas</strong> - 🟡 = Prepara compra | 🔴 = Compra YA</span>
-      </li>
-      <li className="flex gap-3">
-        <span className="flex-shrink-0 text-2xl">4️⃣</span>
-        <span><strong>Monitorea regularmente</strong> - Revisa tabla de stock semanalmente</span>
-      </li>
-      <li className="flex gap-3">
-        <span className="flex-shrink-0 text-2xl">5️⃣</span>
-        <span><strong>Evita desabastecimiento</strong> - Tu peor enemigo es NO tener stock</span>
-      </li>
-    </ul>
+  <!-- IMG 6: INFO FISCAL -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">6</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Información Fiscal</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Datos del proveedor (opcional)</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 p-6 md:p-8 rounded-2xl border-2 border-teal-200 dark:border-teal-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-teal-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-teal-300 dark:border-teal-600">
+          <img src="/inventario/6.png" alt="Información Fiscal" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-teal-200 dark:border-teal-800">
+          <p class="text-sm md:text-base text-teal-800 dark:text-teal-200 mb-3">Deslizándose más abajo en <strong>Información de Compra</strong>, encontraremos <strong>"Información Fiscal"</strong>.</p>
+          <div class="bg-teal-50 dark:bg-teal-900/20 p-3 rounded-lg">
+            <p class="text-sm text-teal-700 dark:text-teal-300 flex items-center gap-2">
+              <span class="text-lg">💡</span>
+              <span>Estas casillas son <strong>completamente opcionales</strong>, pero recomendables en caso de tener información del proveedor</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 7: FORMA Y MÉTODO PAGO -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">7</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Forma y Método de Pago</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Notas adicionales</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/30 dark:to-pink-900/30 p-6 md:p-8 rounded-2xl border-2 border-rose-200 dark:border-rose-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-rose-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-rose-300 dark:border-rose-600">
+          <img src="/inventario/7.png" alt="Forma y Método de Pago" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-rose-200 dark:border-rose-800 space-y-2">
+          <p class="text-sm md:text-base text-rose-800 dark:text-rose-200 mb-3">Más abajo encontrarás:</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-rose-50 dark:bg-rose-900/20 p-3 rounded-lg"><p class="font-semibold text-rose-900 dark:text-rose-300 flex items-center gap-2"><span class="text-xl">💳</span>Forma de Pago</p></div>
+            <div class="bg-rose-50 dark:bg-rose-900/20 p-3 rounded-lg"><p class="font-semibold text-rose-900 dark:text-rose-300 flex items-center gap-2"><span class="text-xl">🏦</span>Método de Pago</p></div>
+            <div class="bg-rose-50 dark:bg-rose-900/20 p-3 rounded-lg"><p class="font-semibold text-rose-900 dark:text-rose-300 flex items-center gap-2"><span class="text-xl">📝</span>Notas Adicionales</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 8: REGISTRAR COMPRA -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">8</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Registrar Compra</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Botón de confirmación</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-900/30 dark:to-fuchsia-900/30 p-6 md:p-8 rounded-2xl border-2 border-violet-200 dark:border-violet-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-violet-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-violet-300 dark:border-violet-600">
+          <img src="/inventario/8.png" alt="Registrar Compra" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-violet-200 dark:border-violet-800">
+          <p class="text-sm md:text-base text-violet-800 dark:text-violet-200">En la sección de <strong>Resumen de Compra</strong> se registrará la compra mediante el botón de confirmación.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 9: HISTORIAL RÁPIDO -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-lime-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">9</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Historial Rápido</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Últimas 20 compras</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-lime-50 to-green-50 dark:from-lime-900/30 dark:to-green-900/30 p-6 md:p-8 rounded-2xl border-2 border-lime-200 dark:border-lime-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-lime-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-lime-300 dark:border-lime-600">
+          <img src="/inventario/9.png" alt="Historial Rápido" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-lime-200 dark:border-lime-800">
+          <p class="text-sm md:text-base text-lime-800 dark:text-lime-200">Abajo de la sección de Resumen, en la <strong>parte inferior derecha</strong>, se encuentra el <strong>Historial "Rápido"</strong> que refleja las <strong>últimas 20 compras realizadas</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 10: CREAR PRODUCTO -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">10</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Crear Producto</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Para productos no registrados</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/30 dark:to-blue-900/30 p-6 md:p-8 rounded-2xl border-2 border-sky-200 dark:border-sky-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-sky-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-sky-300 dark:border-sky-600">
+          <img src="/inventario/10.png" alt="Botón Crear Producto" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-sky-200 dark:border-sky-800">
+          <p class="text-sm md:text-base text-sky-800 dark:text-sky-200">En caso de querer registrar un producto que <strong>no esté en el inventario</strong>, acudir al botón <strong>"+Crear Producto"</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 11: REGISTRO RÁPIDO -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">11</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Registro Rápido</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Unidad de medida</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/30 dark:to-red-900/30 p-6 md:p-8 rounded-2xl border-2 border-orange-200 dark:border-orange-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-orange-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-orange-300 dark:border-orange-600">
+          <img src="/inventario/11.png" alt="Registro Rápido Producto" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-orange-200 dark:border-orange-800">
+          <p class="text-sm md:text-base text-orange-800 dark:text-orange-200">Este botón abrirá una <strong>ventana de registro rápido de producto</strong>, en el cual podrás indicar la <strong>unidad de medida</strong> y datos básicos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 12: HISTORIAL COMPLETO -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">12</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Botón Historial</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Superior derecha ventana</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/30 dark:to-rose-900/30 p-6 md:p-8 rounded-2xl border-2 border-pink-200 dark:border-pink-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-pink-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-pink-300 dark:border-pink-600">
+          <img src="/inventario/12.png" alt="Botón Historial" class="w-full transition-transform duration-300 group-hover:scale-105"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-pink-200 dark:border-pink-800">
+          <p class="text-sm md:text-base text-pink-800 dark:text-pink-200">Para visualizar el <strong>historial de compras completo</strong>, acudir al botón <strong>"Historial"</strong> en la parte superior derecha de la ventana principal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMG 13: FILTROS HISTORIAL -->
+  <section class="space-y-6">
+    <div class="flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg text-white font-bold text-xl">13</div>
+      <div><h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Filtros de Historial</h2><p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Todas las compras</p></div>
+    </div>
+    <div class="group relative overflow-hidden bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 p-6 md:p-8 rounded-2xl border-2 border-red-200 dark:border-red-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-red-300/20 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-xl shadow-xl mb-4 border-2 border-red-300 dark:border-red-600">
+          <img src="/inventario/13.png" alt="Filtros Historial Compras" class="w-full transition-transform duration-300 group-hover:scale-[1.02]"/>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl border-2 border-red-200 dark:border-red-800 space-y-3">
+          <p class="text-sm md:text-base text-red-800 dark:text-red-200 mb-3">Aquí podrás <strong>visualizar todas las compras hechas</strong>, filtrándolas por:</p>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+            <div class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 p-2 rounded"><span>📅</span><span>Periodo</span></div>
+            <div class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 p-2 rounded"><span>📦</span><span>Producto</span></div>
+            <div class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 p-2 rounded"><span>📊</span><span>Cantidades</span></div>
+            <div class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 p-2 rounded"><span>📏</span><span>Unidades</span></div>
+            <div class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 p-2 rounded"><span>🧾</span><span>Estado Fiscal</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENSAJE FINAL -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 p-8 md:p-12 lg:p-16 rounded-2xl shadow-2xl">
+    <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
+    <div class="relative">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 text-center">📦 Control Total de Compras</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+          <div class="flex items-start gap-3 text-white"><span class="text-3xl flex-shrink-0">🔍</span><div><p class="font-bold text-lg mb-1">Búsqueda Inteligente</p><p class="text-sm text-blue-100">20 productos con coincidencias</p></div></div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+          <div class="flex items-start gap-3 text-white"><span class="text-3xl flex-shrink-0">📊</span><div><p class="font-bold text-lg mb-1">Stock Automático</p><p class="text-sm text-blue-100">Afecta inventario en tiempo real</p></div></div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+          <div class="flex items-start gap-3 text-white"><span class="text-3xl flex-shrink-0">🧾</span><div><p class="font-bold text-lg mb-1">Info Fiscal Opcional</p><p class="text-sm text-blue-100">Datos proveedor recomendados</p></div></div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+          <div class="flex items-start gap-3 text-white"><span class="text-3xl flex-shrink-0">📝</span><div><p class="font-bold text-lg mb-1">Historial Rápido</p><p class="text-sm text-blue-100">Últimas 20 compras</p></div></div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+          <div class="flex items-start gap-3 text-white"><span class="text-3xl flex-shrink-0">➕</span><div><p class="font-bold text-lg mb-1">Crear Producto</p><p class="text-sm text-blue-100">Registro rápido desde aquí</p></div></div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+          <div class="flex items-start gap-3 text-white"><span class="text-3xl flex-shrink-0">🎯</span><div><p class="font-bold text-lg mb-1">Filtros Avanzados</p><p class="text-sm text-blue-100">5 criterios de búsqueda</p></div></div>
+        </div>
+      </div>
+    </div>
   </section>
 </div>
   `,
