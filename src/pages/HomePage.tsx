@@ -29,11 +29,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
     { id: 'faq', label: '❓ Preguntas Frecuentes', description: 'Resuelve dudas comunes' },
   ], []);
 
-  // ✅ OPTIMIZACIÓN 4: Memoizar stats
+  // ✅ OPTIMIZACIÓN 4: Memoizar stats - ACTUALIZADO
   const stats = useMemo(() => [
     { number: '10', label: 'Módulos Integrados' },
-    { number: '100+', label: 'Documentos' },
-    { number: '5000+', label: 'Usuarios Activos' },
+    { number: '90,000+', label: 'Líneas de Código' },
+    { number: '', label: 'SOFTWARE PERSONALIZADO PARA DISTRIBUIDORA CASTRUITA', isCustom: true },
   ], []);
 
   return (
@@ -96,14 +96,21 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* STATS */}
+      {/* STATS - ACTUALIZADO */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, idx) => (
-          <div key={idx} className="p-6 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-center">
-            <div className="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">
+          <div 
+            key={idx} 
+            className={`p-6 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-center ${
+              stat.isCustom ? 'md:col-span-3' : ''
+            }`}
+          >
+            <div className={`${stat.isCustom ? 'text-5xl' : 'text-4xl'} font-bold text-orange-600 dark:text-orange-400 mb-2`}>
               {stat.number}
             </div>
-            <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+            <p className={`${stat.isCustom ? 'text-lg font-semibold' : ''} text-gray-600 dark:text-gray-400`}>
+              {stat.label}
+            </p>
           </div>
         ))}
       </section>
@@ -141,23 +148,23 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <div className="space-y-4">
           <div className="flex gap-4">
             <span className="font-bold text-violet-600 dark:text-violet-400 min-w-fit">Fase 1 (1-3 días):</span>
-            <span className="text-gray-700 dark:text-gray-300"><strong>Recibos</strong> y <strong>Clientes</strong> — Fundamentos de ventas</span>
+            <span className="text-gray-700 dark:text-gray-300"><strong>Recibos</strong> y <strong>Clientes</strong> – Fundamentos de ventas</span>
           </div>
           <div className="flex gap-4">
             <span className="font-bold text-violet-600 dark:text-violet-400 min-w-fit">Fase 2 (4-6 días):</span>
-            <span className="text-gray-700 dark:text-gray-300"><strong>Inventario</strong> y <strong>Precios</strong> — Gestión de operaciones</span>
+            <span className="text-gray-700 dark:text-gray-300"><strong>Inventario</strong> y <strong>Precios</strong> – Gestión de operaciones</span>
           </div>
           <div className="flex gap-4">
             <span className="font-bold text-violet-600 dark:text-violet-400 min-w-fit">Fase 3 (7-8 días):</span>
-            <span className="text-gray-700 dark:text-gray-300"><strong>Deudas</strong> y <strong>Reportes</strong> — Análisis financiero</span>
+            <span className="text-gray-700 dark:text-gray-300"><strong>Deudas</strong> y <strong>Reportes</strong> – Análisis financiero</span>
           </div>
           <div className="flex gap-4">
             <span className="font-bold text-violet-600 dark:text-violet-400 min-w-fit">Fase 4 (9-10 días):</span>
-            <span className="text-gray-700 dark:text-gray-300"><strong>Cotizaciones</strong> y <strong>UbicuoAI</strong> — Automatización</span>
+            <span className="text-gray-700 dark:text-gray-300"><strong>Cotizaciones</strong> y <strong>UbicuoAI</strong> – Automatización</span>
           </div>
           <div className="flex gap-4">
             <span className="font-bold text-violet-600 dark:text-violet-400 min-w-fit">Fase 5 (11+ días):</span>
-            <span className="text-gray-700 dark:text-gray-300"><strong>Usuarios</strong> y <strong>Dispositivos</strong> — Configuración avanzada</span>
+            <span className="text-gray-700 dark:text-gray-300"><strong>Usuarios</strong> y <strong>Dispositivos</strong> – Configuración avanzada</span>
           </div>
         </div>
       </section>
