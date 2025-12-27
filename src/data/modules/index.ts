@@ -5,6 +5,9 @@
 // ===== LAZY LOADING: Mapa de módulos con importaciones dinámicas =====
 export const modulesMap = {
   recibos: () => import('./recibos').then(m => m.recibos),
+  recibos_parte1: () => import('./recibos_parte1').then(m => m.recibos_parte1),
+  recibos_parte2: () => import('./recibos_parte2').then(m => m.recibos_parte2),
+  recibos_parte3: () => import('./recibos_parte3').then(m => m.recibos_parte3),
   clientes: () => import('./clientes').then(m => m.clientes),
   inventario: () => import('./inventario').then(m => m.inventario),
   precios: () => import('./precios').then(m => m.precios),
@@ -45,6 +48,60 @@ export const modulesList = [
       complexity: 'Alta',
       importance: 'CRÍTICA',
       timeToMaster: '2-3 días'
+    }
+  },
+  {
+    id: 'recibos_parte1',
+    label: 'Generador de Recibos - Parte 1',
+    description: 'Gestión de Órdenes: Activas, Filtros e Historial',
+    category: 'ventas',
+    priority: 'critical',
+    icon: 'Receipt',
+    color: 'from-blue-500 to-indigo-500',
+    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+    borderColor: 'border-blue-200 dark:border-blue-800',
+    order: 1.1,
+    shortcut: 'R1',
+    stats: {
+      complexity: 'Alta',
+      importance: 'CRÍTICA',
+      timeToMaster: '6-8 horas'
+    }
+  },
+  {
+    id: 'recibos_parte2',
+    label: 'Generador de Recibos - Parte 2',
+    description: 'Creación de Órdenes: Nueva Orden, Búsqueda y Carrito',
+    category: 'ventas',
+    priority: 'critical',
+    icon: 'Receipt',
+    color: 'from-green-500 to-emerald-500',
+    bgColor: 'bg-green-50 dark:bg-green-900/20',
+    borderColor: 'border-green-200 dark:border-green-800',
+    order: 1.2,
+    shortcut: 'R2',
+    stats: {
+      complexity: 'Alta',
+      importance: 'CRÍTICA',
+      timeToMaster: '6-8 horas'
+    }
+  },
+  {
+    id: 'recibos_parte3',
+    label: 'Generador de Recibos - Parte 3',
+    description: 'Gestión y Procesamiento: Secciones, Guardar y Procesar',
+    category: 'ventas',
+    priority: 'critical',
+    icon: 'Receipt',
+    color: 'from-purple-500 to-pink-500',
+    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+    borderColor: 'border-purple-200 dark:border-purple-800',
+    order: 1.3,
+    shortcut: 'R3',
+    stats: {
+      complexity: 'Alta',
+      importance: 'CRÍTICA',
+      timeToMaster: '6-8 horas'
     }
   },
   {
