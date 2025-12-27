@@ -5,7 +5,6 @@ import {
   Home,
   BookOpen,
   HelpCircle,
-  Settings,
   Zap,
 } from 'lucide-react';
 import { modulesList } from '../data/modules';
@@ -43,21 +42,16 @@ export function Sidebar({
     return currentPath === href || currentPath.startsWith(href + '/');
   }, [currentPath]);
 
-  // ✅ OPTIMIZACIÓN 3: Memoizar estructura de guías
+  // ✅ GUÍAS - SOLO LAS ESENCIALES
   const guides = useMemo(() => [
     { id: 'primeros-pasos', label: 'Primeros Pasos', href: '/guias/primeros-pasos', icon: Zap },
-    { id: 'instalacion', label: 'Instalación', href: '/guias/instalacion', icon: Settings },
-    { id: 'configuracion', label: 'Configuración', href: '/guias/configuracion', icon: Settings },
-    { id: 'flujos', label: 'Flujos de Operación', href: '/guias/flujos', icon: BookOpen },
-    { id: 'seguridad', label: 'Seguridad', href: '/guias/seguridad', icon: Settings },
+    { id: 'instalacion', label: 'Instalación', href: '/guias/instalacion', icon: BookOpen },
     { id: 'troubleshooting', label: 'Solución de Problemas', href: '/guias/troubleshooting', icon: HelpCircle },
   ], []);
 
-  // ✅ OPTIMIZACIÓN 4: Memoizar estructura de introducción
+  // ✅ INTRODUCCIÓN - SOLO LO BÁSICO
   const introductionItems = useMemo(() => [
     { id: 'overview', label: 'Acerca de CHUMI', href: '/introduccion/overview', icon: BookOpen },
-    { id: 'arquitectura', label: 'Arquitectura Técnica', href: '/introduccion/arquitectura', icon: Settings },
-    { id: 'requisitos', label: 'Requisitos del Sistema', href: '/introduccion/requisitos', icon: Zap },
   ], []);
 
   // ✅ OPTIMIZACIÓN 5: Memoizar categorías ordenadas
@@ -65,9 +59,9 @@ export function Sidebar({
     { key: 'ventas', label: 'Ventas & Facturas', icon: BookOpen },
     { key: 'clientes', label: 'Gestión de Clientes', icon: Home },
     { key: 'operaciones', label: 'Operaciones', icon: Zap },
-    { key: 'financiero', label: 'Financiero', icon: Settings },
+    { key: 'financiero', label: 'Financiero', icon: BookOpen },
     { key: 'inteligencia', label: 'Inteligencia & IA', icon: Zap },
-    { key: 'seguridad', label: 'Seguridad', icon: Settings },
+    { key: 'seguridad', label: 'Seguridad', icon: BookOpen },
   ], []);
 
   const handleCategoryToggle = useCallback((category: string) => {
@@ -184,7 +178,7 @@ export function Sidebar({
               )}
             </div>
 
-            {/* Guides Section */}
+            {/* Guides Section - SIMPLIFICADO */}
             {!isCollapsed && (
               <div className="space-y-2">
                 <h3 className="text-xs font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest px-4 py-2">
@@ -212,7 +206,7 @@ export function Sidebar({
               </div>
             )}
 
-            {/* Introduction Section */}
+            {/* Introduction Section - SIMPLIFICADO */}
             {!isCollapsed && (
               <div className="space-y-2">
                 <h3 className="text-xs font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest px-4 py-2">
